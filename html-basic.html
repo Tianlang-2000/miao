@@ -1,0 +1,200 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <title>html-basic</title>
+    <meta charset="utf-8">
+</head>
+
+<body>
+  <h1><strong>lorem</strong></h1>
+  <h2><strong>lorem,ipsum.</strong></h2>
+  <h3><strong>lorem,ipsum dolor.</strong></h3>
+  <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Alias animi et quas recusandae. Nulla enim porro
+    ratione,
+    cum dicta officiis? Repudiandae maxime voluptate dolore a. Velit tempora at dolor. Fuga?</p>
+  <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Vel nostrum recusandae hic dicta aliquam aut? Asperiores
+    praesentium quia quibusdam facilis at optio aliquid amet vitae tempora sequi? Et, placeat labore!</p>
+  <p>Lorem, ipsum dolor sit amet consectetur adipisicing elit. Quis sapiente exercitationem harum eveniet velit
+    delectus
+    excepturi fugiat, sunt nam a recusandae amet eos explicabo illo incidunt, architecto natus maxime?
+    Necessitatibus.</p>
+  <a target="_blank" href="https://home.jd.com">在新窗口打开京东</a>
+  <a href="mailto:litianlang2000@qq.com">点我发邮件</a>
+  <a href="#bottom">点我回底部</a>
+  <a href="https://ys.mihoyo.com" download="genshin.exe" target="_blank">下载原神(官网太复杂，找不到直接下载的url)</a>
+  <div></div><img src="https://act-webstatic.mihoyo.com/puzzle/hk4e/pz_HchpTjRAPB/resource/puzzle/2025/01/20/b365f4a00013a11d261dd49c49ea5aa2_5880749437884112411.png?x-oss-process=image/format,webp/quality,Q_90&quot" alt="原神下载图标" height="100" width="200">
+  
+  <hr>  
+  <hr>
+  
+  <marquee behavior="" direction="right">666</marquee>
+  <i>这是斜体，视觉斜体</i>
+  <strong>这是加粗，这个是语义强调，其他是纯视觉变化以后会css代替</strong>
+  <b>这是b，视觉加粗</b>
+  <em>这是斜体，语义强调</em>
+  <u>这是下滑线</u>
+  <!--注释-->  
+  <pre><code>
+    function a() {
+      return 8
+    }
+  </code></pre>
+  
+  <hr>
+  
+  <ul>
+    <li>小学
+      <ol>
+        <li>一年级
+          <ol>
+            <li>上学期</li>
+            <li>下学期</li>
+          </ol>
+        </li>
+        <li>二年级</li>
+        <li>三年级</li>
+      </ol>
+    </li>
+    <li>初中</li>
+    <li>高中</li>
+    <li>大学</li>
+  </ul>
+
+  <hr>
+  
+  <dl>
+    <dt>班级</dt>
+      <dd>三年二班</dd>
+    <dt>老师</dt>
+      <dd>李老师</dd>
+      <dd>不是</dd>
+      <dd>你老师</dd>
+    <dt>学生</dt>
+      <dd>曾勃</dd>
+      <dd>王欣然</dd>
+  </dl>
+
+  <hr>
+
+  <h1>google搜索</h1>
+  <form action="https://www.google.com.hk./search" target="_blank">
+    <input type="text" name="q">
+    <input hidden type="text" name="ie" value="utf-8">
+    <input hidden type="text" name="source_id" value="utf">
+    <button>在新窗口打开</button>
+  </form>
+  
+  <hr>
+
+  <form action="">
+    <p>个人信息调查表</p>
+    <dl>
+      <dt>性别</dt>
+        <dd>
+          <label><input type="checkbox" name="gender" value="male">男</label>
+          <label><input type="checkbox" name="gender" value="female">女</label>
+        </dd>
+      <dt>年龄</dt>
+      <dd>
+        <select name="age" id="">
+          <option hidden value="">请选择</option>
+          <optgroup label="少年">
+            <option value="1-6">1-6岁</option>
+            <option value="6-12">6-12岁</option>
+          </optgroup>
+          <optgroup label="青年">
+            <option value="12-16">12-16岁</option>
+            <option value="16-18">16-18岁</option>
+          </optgroup>
+          <optgroup label="成年">
+            <option value="18-22">18-22岁</option>
+            <option value="22-26">22-26岁</option>
+          </optgroup>
+        </select>
+      </dd>
+      <dt>生日</dt>
+      <dd>
+        <input type="date" value="" name="brithday">
+      </dd>
+      <dt>生辰</dt>
+      <dd>
+        <input type="datetime" name="brithday_time">
+      </dd>
+      <dt>照片</dt>
+      <dd>
+        <label for="photo"><input hidden type="file" id="photo">点我上传照片</label>
+      </dd>
+      <dt>自我介绍</dt>
+      <dd>
+        <textarea name="intro" cols="30" rows="10">&lt;/textarea></textarea>
+      </dd>
+    </dl>
+    <fieldset disabled>
+      <legend>这里的东西全部禁用</legend>
+      <input type="text">
+      <input type="text">
+      <input type="text">
+      <input type="text">
+      <input type="text">
+    </fieldset>
+    <button>提交</button>
+    <button type="reset">重置</button>
+  </form>
+
+  <hr>
+
+
+  <table border="1">
+    <col>
+    <col bgcolor="red">
+      <thead>
+        <tr>
+          <th>姓名</th>
+          <th>分号</th>
+          <th>分数</th>
+          <th>分数</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <th>lisi</th>
+          <td>2201013</td>
+          <td rowspan="2">77</td>
+          <td>77</td>
+        </tr>
+        <tr>
+          <th>lisi</th>
+          <td>2201013</td>
+          <td>77</td>
+        </tr>
+        <tr>
+          <th>lisi</th>
+          <td>2201013</td>
+          <td>77</td>
+          <td>77</td>
+        </tr>
+        <tr>
+          <th>lisi</th>
+          <td>2201013</td>
+          <td>77</td>
+          <td>77</td>
+        </tr>
+      </tbody>
+  </table>
+
+  <hr>
+
+  <hr>
+
+  <a target="bottom-frame" href="https://www.mihayo.com/">小米</a>
+  <div></div>
+  <iframe name="bottom-frame" src="https://www.nodejs.org/" frameborder="1"></iframe>
+
+  <div>aaa&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;bbb</div>
+  <pre>aaa       bbbb</pre>
+  >>>>>>>>>>>>>>>>>&lt;<<<<<<<<<<<<<<&lt;span>&lt;/span>
+  <div id="bottom"></div>
+</body>
+
+</html>
