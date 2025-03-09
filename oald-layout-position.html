@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>oald-layout-position</title>
+</head>
+<style>
+  html, body {
+    margin: 0;
+    position: relative;
+    height: 100%;
+    min-width: 500px;
+  }
+  aside, header, main {
+    overflow: scroll;
+  }
+  aside {
+    position: absolute;
+    left: 0;
+    top: 0;
+    bottom: 0;
+    width: 100px;
+    box-sizing: border-box;
+    border: 2px solid;
+    background-color: blanchedalmond;
+  }
+  header {
+    position: absolute;
+    top: 0;
+    left: 100px;
+    right: 200px;
+    height: 100px;
+    box-sizing: border-box;
+    border: 2px solid;
+    background-color: rgb(46, 46, 150);
+  }
+  main {
+    position: absolute;
+    top: 100px;
+    left: 100px;
+    right: 200px;
+    bottom: 0;
+    box-sizing: border-box;
+    border: 2px solid;
+    background-color: rgb(124, 124, 153);
+  }
+  aside.right_1 {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    right: 100px;
+    left: auto;
+    width: 100px;
+    box-sizing: border-box;
+    border: 2px solid;
+    background-color: rgb(129, 47, 47);
+  }
+  aside.right_2 {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    right: 0;
+    left: auto;
+    width: 100px;
+    box-sizing: border-box;
+    border: 2px solid;
+    background-color: rgb(177, 126, 60);
+  }
+</style>
+<body>
+  <aside>Lorem ipsum dolor sit amet consectetur adipisicing elit. Ab ex eos amet animi quisquam ratione facilis similique deserunt. Dolore ab consectetur quod debitis quia eos perspiciatis voluptas quibusdam totam id.</aside>
+  <header>Lorem ipsum dolor sit amet consectetur adipisicing elit. Quis itaque debitis natus ratione laboriosam illum qui vitae tempore, nemo voluptatem inventore deleniti magni facere veritatis veniam beatae dignissimos iusto doloribus?</header>
+  <main>Lorem ipsum dolor sit amet consectetur adipisicing elit. Impedit, atque obcaecati quos enim cumque, veritatis nemo autem laboriosam quia quae suscipit eligendi voluptates quo cupiditate repellendus! Ullam pariatur fugit illo.</main>
+  <aside class="right_1">Lorem ipsum dolor sit amet consectetur adipisicing elit. Cupiditate laboriosam ut earum suscipit iusto placeat eius ex, nulla est, illo et quia molestias ducimus voluptatem repellat sit voluptatum autem asperiores!</aside>
+  <aside class="right_2">Lorem ipsum dolor sit amet, consectetur adipisicing elit. Tenetur eos molestias ullam a fuga, impedit vel incidunt porro. Modi, soluta. Unde harum quis alias illum nihil? Aliquid natus fugiat doloribus.</aside>
+</body>
+</html>
