@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+</head>
+<style>
+  ul {
+    box-sizing: border-box;
+    border: 1px solid;
+    padding: 0;
+    list-style: none;
+  }
+  ul.menu > li {
+    display: inline-block;
+  }
+  ul.menu li {
+    position: relative;
+  }
+  ul.menu li:hover > ul {
+    display: block;
+  }
+  ul.menu ul {
+    display: none;
+    position: absolute;
+    left: 0;
+    top: 100%;
+    white-space: nowrap;
+    width: 200px;
+  }
+  ul.menu > li ul ul {
+    left: 100%;
+    top: 0;
+  }
+</style>
+<body>
+  <ul class="menu">
+    <li>file
+      <ul>
+        <li>new text file</li>
+        <li>new file</li>
+        <li>new window</li>
+        <li>new window with profile
+          <ul>
+            <li>new profile</li>
+          </ul>
+        </li>
+      </ul>
+    </li>
+    <li>edit
+      <ul>
+        <li>undo</li>
+        <li>redo</li>
+        <li>cut</li>
+      </ul>
+    </li>
+    <li>selection
+      <ul>
+        <li>select all</li>
+        <li>expand selection</li>
+        <li>shrink selection</li>
+      </ul>
+    </li>
+    <li>view
+      <ul>
+        <li>command palette</li>
+        <li>open view</li>
+        <li>appearence</li>
+      </ul>
+    </li>
+  </ul>
+</body>
+</html>
