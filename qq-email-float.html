@@ -9,12 +9,25 @@
   html,body {
     margin: 0;
     height: 100%;
+    width: 100%;
   }
-  div {
+  div.a {
     overflow: scroll;
-    float: left;
+    height: 150px;
+    background-color: aliceblue;
   }
-
+  div.b {
+    float: left;
+    width: 150px;
+    height: calc(100% - 150px);
+    background-color: antiquewhite;
+  }
+  div.c {
+    overflow: scroll;
+    width: calc(100% - 150px);
+    height: calc(100% - 150px);
+    background-color: aqua;
+  }
 </style>
 <body>
   <div class="a">Lorem ipsum dolor sit amet consectetur adipisicing elit. Tenetur dolore quae, distinctio sapiente illo molestiae voluptatem animi veritatis odit dolores officia autem soluta consectetur, quis, sint obcaecati nobis. Atque, facere.</div>
