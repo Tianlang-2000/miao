@@ -91,25 +91,52 @@ var V = h * pi * r * r
 var t = 20000 / V + (20000 % V >= (V / 2) ? 0 : 1)
 alert("最少需要" + t.toFixed(0) + "桶")
 </script>
-<script id="ch0103/15">
+<script src="x" id="ch0103/15">
 var n = +prompt("多少苹果")
 var x = +prompt("虫子几小时吃完一个")
 var y = +prompt("过去了多少小时")
 var z = n - (y / x + (y % x >=(x / 2) ? 0 : 1)).toFixed(0)
 alert("还剩下的苹果数为" + z) 
 </script>
-<script id="ch0103/16">
-
+<script src="xxx" id="ch0103/16">
+var Xa = +prompt("Xa=")
+var Ya = +prompt("Ya=")
+var Xb = +prompt("Xb=")
+var Yb = +prompt("Yb=")
+var a = Xa - Xb
+var b = Ya - Yb
+var c = (a * a + b * b) ** 0.5
+alert("AB的长度为" + c.toFixed(3)) 
 </script>
-<script id="ch0103/17">
-
+<script src="xxx" id="ch0103/17">
+var x1 = +prompt("x1=")
+var y1 = +prompt("y1=")
+var x2 = +prompt("x2=")
+var y2 = +prompt("y2=")
+var x3 = +prompt("x3=")
+var y3 = +prompt("y3=")
+var c1 = ((x1 - x2) * (x1 - x2) + (y1 - y2) * (y1 - y2)) ** 0.5
+var c2 = ((x1 - x3) * (x1 - x3) + (y1 - y3) * (y1 - y3)) ** 0.5
+var c3 = ((x2 - x3) * (x2 - x3) + (y2 - y3) * (y2 - y3)) ** 0.5
+var p = (c1 + c2 + c3) / 2
+var s = (p * (p - c1) * (p - c2) * (p - c3)) ** 0.5 
+alert("三角形面积为" + s.toFixed(2))
 </script>
-<script id="ch0103/18">
-
+<script src="xx" id="ch0103/18">
+var a1 = +prompt("a1=")
+var a2 = +prompt("a2=")
+var n = +prompt("第几项")
+var a_n = a1 + (n - 1) * (a2 - a1)
+alert("第n项为" + a_n)
 </script>
-<script id="ch0103/19">
-
+<script src="xx" id="ch0103/19">
+var A = +prompt("A=")
+var B = +prompt("B=")
+var result_3 = A * B
+alert("结果为" + result_3)
 </script>
 <script id="ch0103/20">
-
+var n = +prompt("一个正整数n, 0 <= n < 31")
+var result_4 = 2 ** n
+alert("结果为" + result_4)
 </script>
