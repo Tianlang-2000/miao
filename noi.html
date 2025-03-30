@@ -16,26 +16,25 @@ var A = +prompt("A=")
 var B = +prompt("B=")
 var C = +prompt("C=")
 var result = (A + B) / C
-alert(result)
+alert(result.toFixed(0))
 </script>
 <script src="" id="ch0103/04">
 var A = +prompt("A=")
 var B = +prompt("B=")
-var result_1 = A / B, result_2 = A % B
-alert("商为" + result_1)
-alert("余数为" + result_2)
+var result_1 = (A - A % B ) / B, result_2 = A % B
+console.log(result_1.toFixed(0) + " " + result_2)
 </script>
 <script src="" id="ch0103/05">
 var A = +prompt("A=")
 var B = +prompt("B=")
 var result_1 = A / B
-alert("浮点数为" + result_1.toFixed(9))
+alert(result_1.toFixed(9))
 </script>
 <script src="" id="ch0103/06">
 var A = +prompt("确诊")
 var B = +prompt("死亡")
 var result_1 = B / A * 100
-alert("死亡率为" + result_1.toFixed(3) + "%")
+alert(result_1.toFixed(3) + "%")
 </script>
 <script src="" id="ch0103/07">
 var x = +prompt("x=")
@@ -44,44 +43,43 @@ var b = +prompt("b=")
 var c = +prompt("c=")
 var d = +prompt("d=")
 var result = a * x * x * x + b * x * x + c * x + d
-alert("f(x)=" + result)
+alert(result.toFixed(7))
 </script>
 <script src="" id="ch0103/08">
 var F = +prompt("华氏度为")
 var C = 5 * (F-32) / 9
-alert("转化为摄氏度为" + C.toFixed(5)) 
+alert(C.toFixed(5)) 
 </script>
 <script src="" id="ch0103/09">
-var r = +prompt("r=")
+var r = Number(prompt("r="))
 var pi = 3.14159
 var Diameter = 2 * r, circumference = 4 * pi * r, area = pi * r * r
-alert("直径为" + Diameter + ",圆周为" + circumference + ",面积为" + area)
-
+alert(Diameter.toFixed(4) + " " + circumference.toFixed(4) + " " + area.toFixed(4))
 </script>
 <script src="" id="ch0103/10">
 var r1 = +prompt("第一个电阻阻值")
 var r2 = +prompt("第二个电阻阻值")
 var R = 1 / (1 / r1 + 1 / r2)
-alert("并联电阻的阻值" + R.toFixed(2))
+alert(R.toFixed(2))
 </script>
 <script id="ch0103/11">
 var a = +prompt("第一个数")
 var b = +prompt("第二个数")
 var r = a % b 
-alert("余数为" + r.toFixed(4))
+alert(r.toFixed(4))
 </script>
 <script  id="ch0103/12">
 var r = +prompt("球的半径")
 var pi = 3.14
 var V = 4 / 3 * pi * r * r * r
-alert("体积为" + V)
+alert(V)
 </script>
 <script src="" id="ch0103/13">
 var n = +prompt("输入一个三位数")
 var single = n % 10
 var ten = (n % 100 - n % 10) / 10
 var hundred = (n - n % 100) / 100
-alert("倒过来为" + single + ten + hundred)
+alert("" + single + ten + hundred)
 </script>
 <script src="" id="ch0103/14">
 var h = +prompt("桶深")
@@ -89,14 +87,14 @@ var r = +prompt("底面半径")
 var pi = 3.14159
 var V = h * pi * r * r
 var t = 20000 / V + (20000 % V >= (V / 2) ? 0 : 1)
-alert("最少需要" + t.toFixed(0) + "桶")
+alert(t.toFixed(0))
 </script>
 <script src="" id="ch0103/15">
 var n = +prompt("多少苹果")
 var x = +prompt("虫子几小时吃完一个")
 var y = +prompt("过去了多少小时")
 var z = n - (y / x + (y % x >=(x / 2) ? 0 : 1)).toFixed(0)
-alert("还剩下的苹果数为" + z) 
+alert(z) 
 </script>
 <script src="" id="ch0103/16">
 var Xa = +prompt("Xa=")
@@ -106,7 +104,7 @@ var Yb = +prompt("Yb=")
 var a = Xa - Xb
 var b = Ya - Yb
 var c = (a * a + b * b) ** 0.5
-alert("AB的长度为" + c.toFixed(3)) 
+alert(c.toFixed(3)) 
 </script>
 <script src="" id="ch0103/17">
 var x1 = +prompt("x1=")
@@ -120,23 +118,23 @@ var c2 = ((x1 - x3) * (x1 - x3) + (y1 - y3) * (y1 - y3)) ** 0.5
 var c3 = ((x2 - x3) * (x2 - x3) + (y2 - y3) * (y2 - y3)) ** 0.5
 var p = (c1 + c2 + c3) / 2
 var s = (p * (p - c1) * (p - c2) * (p - c3)) ** 0.5 
-alert("三角形面积为" + s.toFixed(2))
+alert(s.toFixed(2))
 </script>
 <script id="ch0103/18">
 var a1 = +prompt("a1=")
 var a2 = +prompt("a2=")
 var n = +prompt("第几项")
 var a_n = a1 + (n - 1) * (a2 - a1)
-alert("第n项为" + a_n)
+alert(a_n)
 </script>
 <script id="ch0103/19">
 var A = +prompt("A=")
 var B = +prompt("B=")
 var result_3 = A * B
-alert("结果为" + result_3)
+alert(result_3)
 </script>
 <script id="ch0103/20">
 var n = +prompt("一个正整数n, 0 <= n < 31")
 var result_4 = 2 ** n
-alert("结果为" + result_4)
+alert(result_4)
 </script>
