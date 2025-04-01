@@ -292,14 +292,17 @@ alert(result_4)
   var x1 = +prompt()
   var x2 = +prompt()
   var x3 = +prompt()
-  if (x1 >= x2 && x1 >= x3) {
-    console.log(x1)
-  } elif (x2 >= x1 && x2 >= x3) 
-  {
-    console.log(x2)
-  } elif (x3 >= x1 && x3 >= x2)
-  {
-    console.log(x3)  }
+  var max = -Infinity
+  if (x1 > max) {
+    max = x1
+  }
+  if (x2 > max) {
+    max = x2
+  }
+  if (x3 > max) {
+    max = x3
+  }
+  console.log(max)
 </script>
 <script id="ch0104/16">
   var a = +prompt("a=")
@@ -312,17 +315,145 @@ alert(result_4)
   }
 </script>
 <script id="ch0104/17">
-  
+  var a = +prompt()
+  if ((a % 4 == 0 && a % 100 != 0) || a % 400 == 0) {
+    console.log('Y')
+  } else {
+    console.log('N')
+  }
 </script>
 <script id="ch0104/18">
-
+  var x = +prompt()
+  var y = +prompt()
+  if (x <= 1 && x >= -1 && y <= 1 && y >= -1) {
+    console.log("yes")
+  } else {
+    console.log('no')
+  }
 </script>
 <script id="ch0104/19">
-
+  var a = +prompt()
+  var b = +prompt()
+  var op =prompt()
+  if (op == "+") {
+    console.log(a + b)
+  } else if (op == "-") {
+    console.log(a - b)
+  } else if (op == "*") {
+    console.log(a * b)
+  } else if (op == "/") {
+    if (b == 0) {
+      console.log("Divided by zero!")
+    } else console.log(a / b)
+  } else {
+    console.log("Invalid operator!")
+  }
 </script>
 <script id="ch0104/20">
-
+  var a = +prompt()
+  var b = +prompt()
+  var c = +prompt()
+  var delta = b * b - 4 * a * c
+  if (delta == 0) {
+    x = (-b) / (2 * a)
+    console.log("x1=x2=" + x)
+  } else if (delta > 0) {
+    x1 = (-b + delta ** 0.5) / 2 * a
+    x2 = (-b - delta ** 0.5) / 2 * a
+    console.log("x1=" + x1 + ";x2=" + x2)
+  } else if (delta < 0) {
+    x1real = x2real = -b / 2 * a
+    x1imge = (-delta) ** 0.5 / 2 * a
+    x2imge = -x1imge
+    console.log("x1=" + x1real + (x1imge > 0 ? "+":"") + x1imge + "i;x2=" + x2real + (x1imge > 0 ? "+":"") + x2imge + "i")
+  }
 </script>
 <script id="ch0104/21">
+  var n = +prompt()
+  var x = +prompt()
+  var y = +prompt()
+  if (y / x >= n ) {
+    console.log(0)
+  } else {
+    if (y % x == 0) {
+      n = n - y / x
+      console.log(n)
+    } else {
+      n = n - Math.trunc(y / x) - 1
+      console.log(n)
+    }
+  }
+</script>
+<script id="ch0105/01">
+  var n = +prompt()
+  var i = 0
+  while (i <= n) {
+    var age = age +prompt();
+    i = i + 1
+  }
+  var ave = age / n 
+  console.log(ave)
+</script>
+<script id="ch0105/02">
+
+</script>
+<script id="ch0105/03">
+
+</script>
+<script id="ch0105/04">
+
+</script>
+<script id="ch0105/05">
+
+</script>
+<script id="ch0105/06">
+
+</script>
+<script id="ch0105/07">
+
+</script>
+<script id="ch0105/08">
+
+</script>
+<script id="ch0105/09">
+
+</script>
+<script id="ch0105/10">
+
+</script>
+<script id="ch0105/11">
+
+</script>
+<script id="ch0105/12">
+
+</script>
+<script id="ch0105/13">
+
+</script>
+<script id="ch0105/14">
+
+</script>
+<script id="ch0105/15">
+
+</script>
+<script id="ch0105/16">
+
+</script>
+<script id="ch0105/17">
+
+</script>
+<script id="ch0105/18">
+
+</script>
+<script id="ch0105/19">
+
+</script>
+<script id="ch0105/20">
+
+</script>
+<script id="ch0105/21">
+
+</script>
+<script id="ch0105/22">
 
 </script>
