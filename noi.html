@@ -395,34 +395,102 @@ alert(result_4)
   console.log(ave)
 </script>
 <script id="ch0105/02">
-
+  var n = 0
+  for (i = 0; i < 12; i ++) {
+    var n = n + prompt()
+  }
+  var avg = n / 12
+  console.log("$" + avg.toFixed(2))
 </script>
 <script id="ch0105/03">
-
+  var n = +prompt()
+  var all = 0 
+  for (i = 0; i <= n; i++) {
+    var all = all + prompt()
+  }
+  var avg = all / n 
+  console.log(avg.toFixed(4))
 </script>
 <script id="ch0105/04">
-
+  var n = +prompt()
+  var all = 0 
+  for (i = 0; i < n; i++) {
+    var all = all + prompt()
+  }
+  var avg = all / n 
+  console.log(all + " " + avg.toFixed(4))
 </script>
 <script id="ch0105/05">
-
+  var n = +prompt()
+  var max = 0
+  for (i = 0; i < n; i++) {
+    var num = +prompt()
+    if (num > max) {
+      var max = num
+    }
+  }
+  console.log(max)
 </script>
 <script id="ch0105/06">
-
+  var n = +prompt()
+  var max = -Infinity, min = Infinity
+  for (i = 0; i < n; i++) {
+    var num = +prompt()
+    if (num > max) {
+      var max = num
+    }
+    if (num < min) {
+      var min = num
+    }
+  }
+  var span = max - min
+  console.log(span)
 </script>
 <script id="ch0105/07">
-
+  var n = +prompt 
+  var go = 0
+  var si = 0
+  var br = 0
+  for (i = 0; i < n; i++) {
+    var go = go + prompt()
+    var si = si + prompt()
+    var br = br + prompt()
+  }
+  var all = go + si + br
+  console.log(go, si, br, all)
 </script>
 <script id="ch0105/08">
-
+  var n = +prompt()
+  var sum = (n-2) * 180
+  for (i = 1; i < n; i++) {
+    var sum = sum - prompt()
+  }
+  console.log(sum)
 </script>
 <script id="ch0105/09">
-
+  var m = +prompt()
+  var n = +prompt()
+  var sum = 0
+  for (i = m; i <= n; i++) {
+    if (i % 2 == 1) {
+      var sum = sum + i
+    }
+  }
+  console.log(sum)
 </script>
 <script id="ch0105/10">
-
+  var m = +prompt()
+  var n = +prompt()
+  var sum = 0
+  for (i = m; i <= n; i++) {
+    if (i % 17 == 0) {
+      var sum = sum + i
+    }
+  }
+  console.log(sum)
 </script>
 <script id="ch0105/11">
-
+  
 </script>
 <script id="ch0105/12">
 
