@@ -255,10 +255,10 @@ alert(result_4)
   var bike = 50 + distance / 3
   if (walk < bike) {
     console.log("walk")
-  } elif (walk > bike)
+  } else if (walk > bike)
   {
     console.log("bike")
-  } elif (walk = bike)
+  } else if (walk = bike)
   {
     console.log("all")}
 </script>
@@ -266,13 +266,13 @@ alert(result_4)
   var x = +prompt("N = ")
   if (x < 5) {
     y = -x + 2.5
-    console.log(y)
+    console.log(y.toFixed(3))
   } else if (x < 10) {
     y = 2 - 1.5 * (x - 3) * (x - 3)
-    console.log(y)
+    console.log(y.toFixed(3))
   } else {
     y = x / 2 - 1.5
-    console.log(y)
+    console.log(y.toFixed(3))
   }
 </script>
 <script id="ch0104/14">
@@ -308,7 +308,7 @@ alert(result_4)
   var a = +prompt("a=")
   var b = +prompt("b=")
   var c = +prompt("c=")
-  if (a + b < c && a + c < b && b + c < a) {
+  if (a + b > c && a + c > b && b + c > a) {
     console.log("yes")
   } else {
     console.log("no")
@@ -387,7 +387,8 @@ alert(result_4)
 <script id="ch0105/01">
   var n = +prompt()
   var i = 0
-  while (i <= n) {
+  var age = 0
+  while (i < n) {
     var age = age +prompt();
     i = i + 1
   }
@@ -490,31 +491,127 @@ alert(result_4)
   console.log(sum)
 </script>
 <script id="ch0105/11">
-  
+  var k = +prompt()
+  var num1 = 0
+  var num5 = 0
+  var num10 = 0
+  for (i = 0; i < k; i += 1) {
+    var a = +prompt()
+    if (a == 1) {
+      var num1 = num1 + 1
+    }
+    if (a == 5) {
+      var num5 = num5 + 1
+    }
+    if (a == 10) {
+      var num10 = num10 + 1
+    }
+  }
+  console.log(num1, num5, num10)
 </script>
 <script id="ch0105/12">
-
+  var N = +prompt()
+  var m = +prompt()
+  var num = 0
+  for (i = 0; i < N; i += 1) {
+    var input = +prompt()
+    if (input == m) {
+      var num = num + 1
+    }
+  }
+  console.log(num)
 </script>
 <script id="ch0105/13">
-
+  var a = +prompt()
+  var n = +prompt()
+  var result = 1
+  for (i = 0; i < n; i += 1) {
+    var result = result * a
+  }
+  if ((result < 0 ? -result : result) <= 1000000 ) {
+    console.log(result)
+  }
 </script>
 <script id="ch0105/14">
-
+  var x = +prompt()
+  var n = +prompt()
+  for (i = 0; i < n; i += 1) {
+    var x = x * 1.001
+  }
+  console.log(x.toFixed(4))
 </script>
 <script id="ch0105/15">
-
+  var R = +prompt()
+  var M = +prompt()
+  var Y = +prompt()
+  for (i = 0; i < Y;i += 1) {
+    var M = M + M * R * 0.01 
+  }
+  console.log(M)
 </script>
 <script id="ch0105/16">
-
+  var N = +prompt()
+  var K = +prompt()
+  var price = 200
+  for (i = 1; i <= 20; i += 1) {
+    var M = N * i
+    var price = price + price * K * 0.01
+    if (M >= price) {
+      console.log(i)
+      break
+    }
+  }
+  if (M < price) {
+    console.log("impossible")
+  }
 </script>
 <script id="ch0105/17">
-
+  var k = +prompt()
+  var k_num = 0
+  if (k == 1 || k == 2) {
+    var k_num = 1
+  } else {
+    var k_bef_1 = 1
+    var k_bef_2 = 1
+    for (i = 0; i < (k - 2); i += 1) {
+      var k_num = k_bef_1 +k_bef_2
+      var k_bef_2 = k_bef_1
+      var k_bef_1 = k_num
+    }
+  }
+  console.log(k_num)
 </script>
 <script id="ch0105/18">
-
+  var n = +prompt()
+  var ha_all = +prompt()
+  var ha_use = +prompt()
+  var x = ha_use / ha_all
+  for (i = 1; i < n; i += 1) {
+    var ot_all= +prompt()
+    var ot_use= +prompt()
+    var y = ot_use / ot_all
+    if (y - x >= 0.05) {
+      console.log("better")
+    } else if (x - y >= 0.05) {
+      console.log("worse")
+    } else {
+      console.log("same")
+    }
+  }
 </script>
 <script id="ch0105/19">
-
+  var n = +prompt()
+  var m = 0
+  var num = 0
+  var sum = 0
+  for (i = 0; i < n; i += 1) {
+    var m = +prompt()
+    var num = +prompt()
+    var sum = m * 2 / 50  + num * 1.5
+    var m = 0
+    var num = 0 
+  }
+  console.log(sum)
 </script>
 <script id="ch0105/20">
 
