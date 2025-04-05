@@ -614,25 +614,114 @@ alert(result_4)
   console.log(sum)
 </script>
 <script id="ch0105/20">
-
+  var h = +prompt()
+  var total = 0
+  var first_h = h
+  for (i = 1; i <= 10; i++) {
+    h = h / 2
+    total += h
+  }
+  total += first_h
+  console.log(total, h)
 </script>
 <script id="ch0105/21">
-
+  var n = +prompt()
+  while (n !== 1) {
+    if (n % 2 == 1) {
+      var n1 = n
+      n = n * 3 + 1
+      console.log(n + "*3+1" + "=" +n1)
+    }
+    if (n % 2 == 0) {
+      var n2 = n
+      n = n / 2
+      console.log(n +"/2" + "=" +n2)
+    }
+  }
+  console.log("End")
 </script>
 <script id="ch0105/22">
-
+  var mon = 0
+  var Investment_Account = 0
+  var bankrupt = false
+  for (i = 1; i <= 12; i++) {
+    mon += 300
+    var need = +prompt()
+    if (mon - need >= 100) {
+      mon = (mon - need) % 100
+      Investment_Account += (mon - need) - (mon - need) % 100
+    }
+    if (mon - need < 0) {
+      console.log(i)
+      bankrupt = true
+      break
+    }
+  }
+  if (bankrupt = false) {
+    mon += Investment_Account * 1.2
+  }  
 </script>
 <script id="ch0105/23">
-
+  var m = +prompt()
+  var n = +prompt()
+  var no_drug = 0
+  for (i = 0; i < n; i++) {
+    var drug_num = +prompt()
+    if (m >= drug_num) {
+      m -= drug_num
+    }
+    if (m < drug_num) {
+      no_drug += 1
+    }
+  } 
+  console.log(no_drug)
 </script>
 <script id="ch0105/24">
-
+  var n = +prompt()
+  var max_normal = 0
+  for (i = 1; i <= n; i++) {
+    var s_bp = +prompt()
+    var d_bp = +prompt()
+    if (s_bp <= 140 && s_bp >= 90 && d_bp <= 90 && d_bp >= 60) {
+      max_normal += 1
+    } else {
+      max_normal = 0
+    }
+  }
 </script>
 <script id="ch0105/25">
-
+  for (i = 81; i < 342; i++) {
+     var a1 = i % 7
+     var b1 = (i - (i % 7)) / 7 % 7
+     var c1 = (i - (i % 49)) / 49
+     var a2 = i % 9
+     var b2 = (i - (i % 9)) / 9 % 9
+     var c2 = (i - (i % 81)) / 81
+     if (a1 == c2 && b1 == b2 && c1 == a2) {
+      console.log(i)
+     }
+  }
 </script>
 <script id="ch0105/26">
-
+  var n = +prompt()
+  var qua = 0
+  var in_qua = false
+  for (i = 0; i < n; i++) {
+    var num = +prompt()
+    for (i = 1; i <= 4; i++) {
+      var a = num % 10
+      var b = (num - num % 10) / 10 % 10
+      var diff = a - b 
+      if (diff <= 0) {
+        in_qua = true
+        break
+      }
+      num = (num - a) / 10
+    }
+    if (in_qua = false) {
+      qua += 1
+    } 
+  }
 </script>
 <script id="ch0105/27">
 
