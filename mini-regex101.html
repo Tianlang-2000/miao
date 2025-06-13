@@ -1,0 +1,187 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Mini Regex101</title>
+  <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+  <style>
+    input, button {
+      outline: none;
+    }
+    em {
+      font-style:normal;
+    }
+    em:not(:has(:hover)):hover {
+      outline: 2px solid grey;
+    }
+    em:not(:has(:hover)):hover em {
+      background-color: inherit;
+    }
+    [data-group-index="0"] {
+      background-color: #9fcfff;
+    }
+    [data-group-index="1"] {
+      background-color: #9fcba1;
+    }
+    [data-group-index="2"] {
+      background-color: #e0bf8b;
+    }
+    [data-group-index="3"] {
+      background-color: #acadfc;
+    }
+    [data-group-index="4"] {
+      background-color: #e1abf5;
+    }
+    
+    #output {
+      position: relative;
+        width: 300px;
+        height: 200px;
+      > textarea, #result {
+        font-family: consolas;
+        white-space: pre-wrap;
+        word-break: break-all;
+        width: 100%;
+        height: 100%;
+        overflow: auto;
+        border: 1px solid;
+        background-color: transparent;
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <div>
+    <div>REGULAR EXPRESSION</div>
+    <input class="border" type="text" id="reInput" value="(.)" onkeyup="run()">
+    <button class="border" onclick="run()">RUN</button>
+    <div id="tips"></div>
+    <div>FlAGS</div>
+    <label><input type="checkbox" id="flag-g" checked> g</label>
+    <label><input type="checkbox" id="flag-m"> m</label>
+    <label><input type="checkbox" id="flag-i"> i</label>
+    <label><input type="checkbox" id="flag-y"> y</label>
+    <label><input type="checkbox" id="flag-u"> u</label>
+    <label><input type="checkbox" id="flag-s"> s</label>
+    <label><input type="checkbox" id="flag-d" checked> d</label>
+    <label><input type="checkbox" id="flag-v"> v</label>
+    
+    <div>TEST STRING</div>
+    <div id="output">
+      <textarea id="testStringInput" oninput="run()" onscroll="syncScroll()">An explanation of your regex will be automatically generated as you type.
+        An explanation of your regex will be automatically generated as you type.
+        3 chickens
+        55 cows
+        100 eggs
+        1 dragonfly
+        1 pig</textarea>
+      <div id="result" onscroll="syncScroll2()"></div>
+    </div>
+    
+  </div>
+  <script>
+    run()
+    // 元素的id为xxx时，
+    function run() {
+      var reString = reInput.value
+      if(reString == '') {
+        return
+      }
+      var flags = getFlags()
+      try {
+        var re = new RegExp(reString, flags)
+      } catch(e) {
+        if (e instanceof SyntaxError) {
+          tips.innerHTML = e.message
+        } else {
+          throw e
+        }
+      }
+      tips.innerHTML = ''
+      var testString = testStringInput.value
+      var html = ''
+
+      var match
+      
+      var lastLastIndex = 0
+
+      var matchIndex = 0
+      while(match = re.exec(testString)) {
+        html += testString.slice(lastLastIndex, match.index)
+        html += highlightMatch(match, matchIndex)
+        lastLastIndex = re.lastIndex
+        if(match[0].length == 0) {
+          re.lastIndex++
+        }
+        if(re.global == false) {
+          break
+        }
+        matchIndex++
+      }
+
+      html += testString.slice(lastLastIndex)
+
+      result.innerHTML = html
+    }
+    function getFlags() {
+      var flags = ['g','m','i','y','u','s','d','v',]
+
+      return flags.filter(it => {
+        var element = document.getElementById('flag-' + it)
+        if (element.checked) {
+          return true
+        } else {
+          return false
+        }
+      }).join('')
+    }
+    function syncScroll() {
+      result.scrollTop = testStringInput.scrollTop
+    }
+    function syncScroll2() {
+      testStringInput.scrollTop = result.scrollTop
+    }
+    function highlightMatch(match,matchIndex) {
+      if (match[0].length == 0) {
+        var info = [
+          `Match ${matchIndex}`,
+          `------`,
+          `Group 0: [empty string]`,
+          `Pos: ${match.index}-${match.index}`
+        ].join('\n')
+        return `<u calss="zero-width-assert" title="${info}"></u>`
+      }
+
+      var helper = new Array(match[0].length + 1).fill('')
+
+      var groupIndex = 0
+      for (var index of match.indices) {
+        var start = index[0] - match.index
+        var end = index[1] - match.index
+        var info = [
+          `Match ${matchIndex + 1}`,
+          `-----`,
+          `Group ${groupIndex}: ${match[groupIndex]}`,
+          `Pos: ${index[0]} - ${index[1]}`,
+        ].join('\n')
+        
+        helper[start] += `<em data-group-index="${groupIndex}" title="${info}">`
+        helper[end] = '</em>' + helper[end]
+        groupIndex++
+      }
+
+      var result = ''
+      for(var i = 0;i < match[0].length; i++) {
+        result += helper[i] + match[0][i]
+      }
+      result += helper[i]
+
+      return result
+    }
+
+    
+  </script>
+</body>
+</html>
