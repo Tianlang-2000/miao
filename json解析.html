@@ -111,6 +111,45 @@
       }
     }
 
+
+
+    // 递归下降表示二叉树
+    function parseBinaryTree(input) {
+      var i = 0
+
+      return parseTree()
+
+      function parseTreeWithKH() {
+        i++
+        var result = parseTree()
+        i++
+        return result
+      }
+      function parseTree() {
+        var rootValue = parseNumber()
+        var root = {
+          val: rootValue,
+          left: null,
+          right: null
+        }
+        if (input[i] === '(') {
+          root.left = parseTreeWithKH()
+        }
+        if (input[i] === '(') {
+          root.right = parseTreeWithKH()
+        }
+        return root
+      }
+      function parseNumber() {
+        i++
+        var start = i
+        while (0 <= input[i] <= 9) {
+          i++
+        }
+        return Number(input.slice(start, i))
+      }
+
+    }
   </script>
 </body>
 </html>
