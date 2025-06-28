@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+</head>
+<body>
+  <script>
+    function parseJSON(input) {
+      var i = 0
+
+      return parseValue()
+
+      function parseObject() {
+        var result = {}
+        i++
+        if (input[i] === '}') {
+          return result
+        }
+
+        while(i < input.length) {
+          var key = parseString()
+          if (input[i] !== ':') {
+            throw new SyntaxError('Expected `:` but got' + input[i])
+          }
+          i++
+          var value = parseValue()
+          result[key] = value
+          if(input[i] === ',') {
+            i++
+          } else if (input[i] === '}') {
+            break
+          }
+        }
+        return result
+      }
+      function parseArray() {
+        var result = []
+        i++
+        if (input[i] === ']') {
+          i++
+          return []
+        }
+        while (i < input.length) {
+          var value = parseValue()
+          result.push(value)
+
+          if (input[i] === ',') {
+            i++
+          } else if (input[i] === ']') {
+            i++
+            break
+          }
+        }
+        return result
+      }
+      function parseValue() {
+        if (char === '{') {
+          return parseObject()
+        }
+        else if (char === '[') {
+          return parseArray()
+        }
+        else if (char === '"') {
+          return parseString()
+        }
+        else if (char === 't') {
+          if (input.slice(i, i + 4) === 'true') {
+            i += 4
+            return true
+          } else {
+            throw new SyntaxError('unexpected token at position: ' + i)
+          }
+        }
+        else if (char === 'f') {
+          if (input.slice(i, i + 5) === 'false') {
+            i += 5
+            return false
+          } else {
+            throw new SyntaxError('unexpected token at position: ' + i)
+          }
+        } else if (char === 'n') {
+          if (input.slice(i, i + 4) === 'null') {
+            i += 4
+            return null
+          } else {
+            throw new SyntaxError('unexpected token at position: ' + i)
+          }
+        } else {
+          return parseNumber()
+        }
+      }
+      function parseString() {
+        i++
+        var start = i
+        while(input[i] !== '"') {
+          i++
+        }
+        var result = input.slice(start, i)
+        i++
+        return result
+      }
+      function parseNumber() {
+        i++
+        var start = i
+        while (0 <= input[i] <= 9) {
+          i++
+        }
+        return Number(input.slice(start, i))
+      }
+    }
+
+  </script>
+</body>
+</html>
