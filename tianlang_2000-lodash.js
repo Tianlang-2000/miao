@@ -1,9 +1,9 @@
-var tianlang_2000 = function() {
-  function compact(Array) {
+var tianlang_2000 = {
+  compact: function (array) {
     var result = []
-    for (var i = 0; i < Array.length; i++) {
-      if (Array[i] !== null || undefined || 0 || NaN || '') {
-        result.push(Array[i])
+    for (var i = 0; i < array.length; i++) {
+      if (array[i] !== null || undefined || 0 || NaN || '') {
+        result.push(array[i])
       }
     }
     return result
