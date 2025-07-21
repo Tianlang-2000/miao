@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>notes</title>
+</head>
+<style>
+  body {
+    margin: 0;
+    padding: 20px;
+    font-family: Arial, Helvetica, sans-serif;
+  }
+  select {
+    width: 200px;
+    padding: 8px;
+    margin-right: 10px;
+  }
+  button {
+    padding: 8px 16px;
+    background-color: #3b79bb;
+    color: white;
+    border: none;
+    cursor: pointer;
+  }
+  button:hover {
+    background-color: #024690;
+  }
+  textarea {
+    width: 100%;
+    height: 200px;
+    padding: 10px;
+    margin-top: 10px;
+    box-sizing: border-box;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+  }
+</style>
+<body>
+  <select name="" id="list"></select>
+  <button onclick="addNote()">new</button>
+  <textarea name="" id="currentnote"></textarea>
+  <script>
+    var list = document.querySelector('#list')
+    var notes = JSON.parse(localStorage.getItem('notes')) || {'anyway': ''}
+    for (var name in notes) {
+      if (notes.hasOwnProperty(name)) {
+        addToList(name)
+      }
+    }
+    var current = document.querySelector('#currentnote')
+    current.value = notes[list.value]
+
+    list.addEventListener('change', () => {
+      current.value = notes[list.value]
+    })
+    current.addEventListener('change', () => {
+      notes[list.value] = current.value
+      saveToStorage()
+    })
+
+    function saveToStorage() {
+      localStorage.setItem('notes', JSON.stringify(notes))
+    }
+    function addToList(name) {
+      var option = document.createElement('option')
+      option.textContent = name
+      list.appendChild(option)
+    }
+    function addNote() {
+      var name = prompt('Note name', '')
+      if (!name) return
+      if (!notes.hasOwnProperty(name)) {
+        notes[name] = ''
+        addToList(name)
+        saveToStorage()
+      }
+      current.value = notes.name
+      list.value = name 
+    }
+  </script>
+</body>
+</html>
