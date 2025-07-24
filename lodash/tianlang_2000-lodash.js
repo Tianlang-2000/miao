@@ -38,7 +38,7 @@ var tianlang_2000 = {
     }
   },
 
-  findindex: function (array, predicate, fromIndex = 0) {
+  findIndex: function (array, predicate, fromIndex = 0) {
     if (typeof predicate === 'function') {
       for (let i = fromIndex; i < array.length; i++) {
         if (predicate(array[i])) {
@@ -72,7 +72,7 @@ var tianlang_2000 = {
     }
   },
 
-  findindex: function (array, predicate, fromIndex = 0) {
+  findLastIndex: function (array, predicate, fromIndex = 0) {
     if (typeof predicate === 'function') {
       for (let i = array.length - 1; i >= fromIndex; i--) {
         if (predicate(array[i])) {
@@ -120,7 +120,7 @@ var tianlang_2000 = {
     return result
   },
 
-  flattendeep: function (array) {
+  flattenDeep: function (array) {
     let result = []
 
     flattendeep1 = function(arr) {
@@ -136,7 +136,41 @@ var tianlang_2000 = {
     return result
   },
 
-  flattendepth: function (array, depth = 1) {
+  flattenDepth: function (array, depth = 1) {
+    
+    flattendepth = function(arr, dep) {
+      if (depth == 0) return arr.slice()
+      return array.reduce((accumulative, val) => {
+        if (Array.isArray(val)) {
+          return accumulative.concat(flattendepth(val, dep - 1))
+        } else {
+          return accumulative.concat(val)
+        }
+      }, [])
+    }
+    let result = flattendepth(array, depth)
+    return result
+  },
 
+  fromPairs: function (pairs) {
+    let result = {}
+    for (let [key, val] of pairs[i]) {
+      result[key] = val
+    }
+    return result
+  },
+
+  toPairs: function (pairs) {
+    if (pairs == null) return []
+
+    if (typeof pairs == 'map') {
+      return Array.from(pairs.entries())
+    }
+    if (pairs instanceof Set) {
+      return Array.from(pairs, value => [value, value])
+    }
+
+    return Object.keys(pairs).map(key => [key, pairs[key]]) 
   }
+    
 }
