@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+</head>
+<body>
+  <textarea id="codeInput">return "hi";</textarea>
+  <button id="button">Run</button>
+  <pre id="output"></pre>
+
+<script>
+  // Your code here.
+  button.addEventListener('click', e => {
+    output.textContent = ''
+    let code = codeInput.value
+
+    let console = {
+      log: function(...args) {
+        let text = args.join(' ')
+        output.textContent += '  ' + new Date().toISOString() + '  ' + text + '\n'
+      }
+    }
+
+    let result = eval(code)
+    output.textContent += '<·' + new Date().toISOString() + '  ' + result + '\n'
+  })
+</script>
+</body>
+</html>

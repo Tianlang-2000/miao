@@ -63,9 +63,9 @@ var tianlang_2000 = {
         }
       }
     } else if (Array.isArray(predicate)) {
-      let [key, value] = predicate
-      for (let i = 0; i < array.length; i++) {
-        if (array[i][key] == value) {
+      const [key, value] = predicate
+      for (let i = fromIndex; i < array.length; i++) {
+        if (array[i][key] === value) {
           return i
         }
       }
@@ -97,9 +97,9 @@ var tianlang_2000 = {
         }
       }
     } else if (Array.isArray(predicate)) {
-      let [key, value] = predicate
+      const [key, value] = predicate
       for (let i = array.length - 1; i >= fromIndex; i--) {
-        if (array[i][key] == value) {
+        if (array[i][key] === value) {
           return i
         }
       }
@@ -121,9 +121,9 @@ var tianlang_2000 = {
   },
 
   flattenDeep: function (array) {
-    let result = []
+    const result = []
 
-    flattendeep1 = function(arr) {
+    const flattendeep1 = function(arr) {
       for (let i = 0; i < arr.length; i++) {
         if (Array.isArray(arr[i])) {
           flattendeep1(arr[i])
@@ -138,8 +138,8 @@ var tianlang_2000 = {
 
   flattenDepth: function (array, depth = 1) {
     
-    flattendepth = function(arr, dep) {
-      if (depth == 0) return arr.slice()
+    const flattendepth = function(arr, dep) {
+      if (dep === 0) return arr.slice()
       return array.reduce((accumulative, val) => {
         if (Array.isArray(val)) {
           return accumulative.concat(flattendepth(val, dep - 1))
@@ -148,13 +148,12 @@ var tianlang_2000 = {
         }
       }, [])
     }
-    let result = flattendepth(array, depth)
-    return result
+    return flattendepth(array, depth)
   },
 
   fromPairs: function (pairs) {
     let result = {}
-    for (let [key, val] of pairs[i]) {
+    for (let [key, val] of pairs) {
       result[key] = val
     }
     return result
@@ -171,6 +170,7 @@ var tianlang_2000 = {
     }
 
     return Object.keys(pairs).map(key => [key, pairs[key]]) 
-  }
+  },
+  
     
 }
