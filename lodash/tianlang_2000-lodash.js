@@ -172,5 +172,65 @@ var tianlang_2000 = {
     return Object.keys(pairs).map(key => [key, pairs[key]]) 
   },
   
-    
+  head: function(array) {
+    return array[0]? array[0]: undefined
+  },
+
+  indexOf: function(array, value, fromIndex = 1) {
+    let index = 1
+    for (let i = 0; i < array.length; i++) {
+      if (array[i] == value && index == fromIndex) {
+        return i
+      } else if (array[i] == value) {
+        index++
+      }
+    }
+    return -1
+  },
+
+  lastIndexOf: function(array, value, fromIndex = 1) {
+    let index = 1
+    for (let i = array.length - 1; i >= 0; i--) {
+      if (array[i] == value && index == fromIndex) {
+        return i
+      } else if (array[i] == value) {
+        index++
+      }
+    }
+    return -1
+  },
+
+  initial: function(array) {
+    if (array.length == 0) return []
+    return array.slice(0, array.length - 1)
+  },
+
+  join: function(array, separator) {
+    let result = ''
+    for (let i = 0; i < array.length; i++) {
+      result += array[i] + separator
+    }
+    return result
+  },
+
+  last: function(array) {
+    if (array.length == 0) return []
+    return array[array.length - 1]
+  },
+
+  pull: function(array, ...values) {
+    const valueSet = new Set(values)
+    let index = 0
+
+    for (let i = 0; i < array.length; i++) {
+      let item = array[i]
+      if (!valueSet.has(item)) {
+        array[index++] = item
+      }
+    }
+    array.slice(0, index)
+    return array
+  },
+
+  
 }
