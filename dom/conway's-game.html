@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>conway-game</title>
+</head>
+<body>
+  <div id="stage"></div>
+  <button id="next">next generation</button>
+  <button id="auto">auto play</button>
+  <script>
+    class Conway {
+      constructor(w, h) {
+        this.width = w
+        this.height = h
+        this.world = new Array(h).fill(0).map(it => new Array(w).fill(0))
+      }
+      next() {
+        var newWorld = new Array(this.height).fill(0).map(it => new Array(this.width).fill(0))
+
+        for (let row = 0; row < this.height; row++) {
+          for (let col = 0; col < this.width; col++) {
+            let n = this.countNeighbor(row, col)
+            if (n < 2 || n > 3) {
+              newWorld[row][col] = 0
+            } else if (n === 3) {
+              newWorld[row][col] = 1
+            } else {
+              newWorld[row][col] = this.world[row][col]
+            }
+          }
+        }
+        this.world = newWorld
+        return this
+      }
+      countNeighbor(row, col) {
+        let n = 0
+        for (let r = row - 1; r <= row + 1; r++) {
+          for (let c = col - 1; c <= col + 1; c++) {
+            if (this.world[r]?.[c] == 1) {
+              n++
+            }
+          }
+        }
+        return n - this.world[row][col]
+      }
+      toHTML() {
+        let result = '<div>'
+        
+        for (let row = 0; row < this.height; row++) {
+          for (let col = 0; col < this.width; col++) {
+            if (this.world[row][col] == 1) {
+              result += '<input type="checkbox" data-row="' + row + '" data-col="' + col + '" checked>'
+            } else {
+              result += '<input type="checkbox" data-row="' + row + '" data-col="' + col + '">'
+            }
+          }
+          result += '<br>'
+        }
+        result += '</div>'
+        return result
+      }
+      randomSeed () {
+        for (let row = 0; row < this.height; row++) {
+          for (let col = 0; col < this.width; col++) {
+            if (Math.random() <= 0.1) {
+              this.world[row][col] = 1
+            }
+          }
+        }
+        return this
+      }
+    }
+
+    let game = new Conway(30, 30)
+    game.randomSeed()
+    game.randomSeed()
+    game.randomSeed()
+    game.randomSeed()
+    stage.innerHTML = game.toHTML()
+
+    next.onclick = () => {
+      game.next()
+      stage.innerHTML = game.toHTML()
+    }
+
+    let running = false;
+    let intervalId;
+    auto.onclick = () => {
+      if (running) {
+        running = false
+        clearInterval(intervalId)
+      } else {
+        running = true
+        intervalId = setInterval(() => {
+          game.next()
+          stage.innerHTML = game.toHTML()
+        }, 200)
+      }
+    }
+  </script>
+</body>
+</html>
