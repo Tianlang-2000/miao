@@ -4,7 +4,7 @@ const net = require('net')
 const port = 8085
 let message = []
 
-const server = net.createServer(socket =>{
+const server = net.createServer(socket => {
   socket.on('data', data => {
     var lines = data.toString().split('\r\n')
     var firstLine = lines.shift()
@@ -22,21 +22,10 @@ const server = net.createServer(socket =>{
       socket.write(
         `<form method="GET" action="leave-message">
         <p>Name: <input type="text" name="name"></p>
-        <p>Message:<br><textarea name="message"></textarea></p>
+        <p>Message:<br><textarea name="value"></textarea></p>
         <p><button type="submit">Send</button></p></form>
         `
       )
-      socket.end()
-    } else if (url.startsWith('/leave-message')) {
-      let [path, query] = url.split('?')
-      let msg = parseQuery(query)
-
-      message.push(msg)
-      socket.write('HTTP/1.1 200 OK\r\n')
-      socket.write('Date: ' + new Date().toISOString() + '\r\n')
-      socket.write('Content-Type: text/html; charset=UTF-8\r\n')
-      //socket.write('Concent-Length: 20\r\n')
-      socket.write('\r\n')
       for (let m of message) {
         socket.write(`
           <fieldset>
@@ -46,6 +35,18 @@ const server = net.createServer(socket =>{
           `
         )
       }
+      socket.end()
+    } else if (url.startsWith('/leave-message')) {
+      let [path, query] = url.split('?')
+      let msg = parseQuery(query)
+
+      message.push(msg)
+      socket.write('HTTP/1.1 302 Found\r\n')
+      socket.write('Date: ' + new Date().toISOString() + '\r\n')
+      socket.write('Location: /message-board\r\n')
+      //socket.write('Concent-Length: 20\r\n')
+      socket.write('\r\n')
+      
       socket.end()
     } else if (url == '/red') {
       socket.write('HTTP/1.1 200 OK\r\n')
@@ -79,7 +80,7 @@ const server = net.createServer(socket =>{
 })
 
 server.listen(port, () => {
-  console.log('sever listening on port', 8085)
+  console.log('sever listening on port', port)
 })
 
 
@@ -89,7 +90,7 @@ function parseQuery(query) {
   let pairs = query.split('&')
   for (let pair of pairs) {
     let [name, value] = pair.split('=')
-    obj[name] = value
+    obj[name] = decodeURIComponent(value)
   }
   return obj
 }
