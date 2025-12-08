@@ -1,0 +1,159 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>Document</title>
+	<script src="react.development.js"></script>
+	<script src="react-dom.development.js"></script>
+
+	<!-- Don't use this in production: -->
+	<script src="babel.min.js"></script>
+</head>	
+<body>
+	<div id="root"></div>
+</body>
+<script type="text/babel" data-presets="react">
+	var { useState, useCallback, useEffect, useMemo} = React;
+	function useTime() {
+		let [time, setTime] = useState(() => new Date())
+
+		useEffect(() => {
+			let id
+			let delay = 1000 - Date.now() % 1000
+			
+			let id2 = setTimeout(() => {
+				setTime(new Date())
+				id = setInterval(() => {
+					setTime(new Date())
+				}, 1000)
+			}, delay)
+			
+
+			return () => {
+				clearInterval(id)
+				clearInterval(id2)
+			}
+		}, [])
+
+		return time
+	}
+
+	function useMousePosition() {
+		let [mousePos,setMousePos] = useState({x:0,y:0})
+
+		useEffect(() => {
+			function onMove(e) {
+				setMousePos({
+					x: e.clientX,
+					y: e.clientY
+				})
+			}
+			window.addEventListener('mousemove', onMove)
+
+			return () => {
+				window.removeEventListener('mousemove', onMove)
+			}
+		}, [])
+
+		return mousePos
+	}
+
+	function useVModel() {
+		let [value, setValue] = useState('')
+
+		let onChange = useCallback(function onChange(e) {
+			setValue(e.target.value)
+		}, [])
+
+		return {
+			value,
+			onChange
+		}
+	}
+	function useRequest(fetcher) {
+		let [loading, setLoading] = useState(true)
+		let [data, setData] = useState('')
+		let [error, setError] = useState('')
+
+		useEffect(() => {
+			fetcher().then(data => {
+				setData(data)
+				setLoading(false)
+			},error => {
+				setError(error)
+				setLoading(false)
+			})
+		}, [])
+
+		return {
+			loading,
+			data,
+			error
+		}
+	}
+
+	function useCountDown(dateString) {
+		let deadLine = useMemo(() => new Date(dateString), [dateString])
+		let [now, setNow] = useState(() => new Date())
+
+		useEffect(() => {
+			let id = setInterval(() => {
+				setNow(new Date())
+			}, 1000)
+
+			return () => clearInterval(id)
+		}, [])
+
+		let seconds = ((deadLine - now) / 1000) | 0
+		return seconds
+	}
+
+	function App() {
+		let time = useTime()
+		let countDown = useCountDown('2025-11-27')
+		let mousePos = useMousePosition()
+		let name = useVModel()
+		let {data, loading} = useRequest(() => {
+			return fetch('https://jsonplaceholder.typicode.com/todos').then(it => it.json())
+		})
+
+		if (loading) {
+      return <div>loading...</div>
+    }
+
+		return (
+			<div className="h-screen flex flex-col justify-center items-center bg-gray-200">
+				距离11月27号还有{countDown}秒
+				{ mousePos.x }, { mousePos.y }
+        <input type="text" {...name}/>
+				{
+					data.map((todo, idx) => {
+						return <div key={todo.id}>
+								<input type="checkbox" checked={todo.completed} onChange={() => {}}/>
+								<span>{ todo.title }</span>
+							</div>
+					})
+				}
+				<h1 className="text-4xl mb-4">Current Time</h1>
+				<p className="text-2xl font-mono">{time.toLocaleTimeString()}</p>
+			</div>
+		)
+	}
+	const container = document.getElementById("root");
+	const root = ReactDOM.createRoot(container);
+	root.render(<App />);
+	function withSearchBar(ManagePage) {
+
+		return function ManageComp() {
+			let [groups,setGroups] = useState([])
+
+			return <div>
+				<SearchBar onChange={(groups) => setGroups(groups)}/>
+					<ManagePage groups={groups}/>
+				</div>
+		}
+	}
+</script>
+</html>

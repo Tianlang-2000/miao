@@ -1,0 +1,29 @@
+<script>
+function buildtable(objs) {
+  var keys = Object.keys(objs[0])
+  var table = document.createElement('table')
+  let tr = document.createElement('tr')
+  for (var key of keys) {
+    var th = document.createElement('th')
+    th.appendChild(document.createTextNode(key))
+    tr.appendChild(th)
+  }
+
+  table.appendChild(tr)
+
+  for (var obj of objs) {
+    let tr = document.createElement('tr')
+    for (var key of keys) {
+      var val = obj[key]
+      var td = document.createElement('td')
+      td.appendChild(document.createTextNode(val))
+      if (typeof val === 'number') {
+        td.style.textAlign = 'right'
+      }
+      tr.appendChild(td)
+    }
+    table.appendChild(tr)
+  }
+  return table
+}
+</script>

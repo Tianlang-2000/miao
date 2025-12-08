@@ -1,0 +1,138 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>Document</title>
+	<script src="react.development.js"></script>
+	<script src="react-dom.development.js"></script>
+
+	<!-- Don't use this in production: -->
+	<script src="babel.min.js"></script>
+</head>	
+<body>
+	<div id="root"></div>
+</body>
+<script type="text/babel" data-presets="react">
+	var { useState, useCallback, useEffect, useMemo} = React;
+
+	function useForceUpdate() {
+		let [x, setX] = useState(0)
+		return useCallback(function() {
+			setX(prev => prev + 1)
+		}, [])
+	}
+
+	function useCounter(init, {min, max}) {
+		let [count, setCount] = useState(() => {
+			if (init > max) {
+				return max
+			} else if (init < min) {
+				return min
+			} else {
+				return init
+			}
+		})
+
+		let minRef = useRef()
+		minRef.current = min
+		let maxRef = useRef()
+		maxRef.current = max
+
+		let inc = useCallback((delta = 1) => {
+			if (typeof delta !== 'number') {
+				delta = 1
+			}
+
+			setCount(count => {
+				count += delta
+				if (count > maxRef.current) {
+					return maxRef.current
+				} else {
+					return count
+				}
+			})
+		}, [])
+
+		let dec = useCallback((delta = 1) => {
+			if (typeof delta !== 'number') {
+				delta = 1
+			}
+
+			setCount(count => {
+				count -= delta
+				if (count < minRef.current) {
+					return minRef.current
+				} else {
+					return count
+				}
+			})
+		}, [])
+
+    let set = useCallback((value) => {
+			if (typeof value !== 'number') {
+				value = 1
+			}
+			setCount(() => {
+				if (value > maxRef.current) {
+					return maxRef.current
+				} else if (value < minRef.current) {
+					return minRef.current
+				} else {
+					return value
+				}
+			})
+		}, [])
+		let reset = useCallback(() => {
+			setCount(() => {
+				if (init > max) {
+					return max
+				}
+				if (init < min) {
+					return min
+				}
+				return init
+			})
+		}, [])
+
+		return [count, { inc, dec, set, reset }]
+	}
+
+	function useSet(initElements) {
+		let [set, setSet] = useState(() => new Set(initElements))
+
+		let add = useCallback(function add(val) {
+			setSet(set => {
+				set.add(val)
+				return new Set(set)
+			})
+		}, [])
+
+		let remove = useCallback(function remove(val) {
+			setSet(set => {
+				set.remove(val)
+				return new Set(set) 
+			})
+		}, [])
+
+		return [set, {add, remove}]
+	}
+
+
+	function App() {
+		let forceUpdate = useForceUpdate()
+		const [current, {inc, dec, set, reset}] = useCounter(100, {min: 2, max: 30})
+
+		return (
+			<div>
+				<button onClick={update}>forceUpdate</button>
+				
+			</div>
+		)
+	}
+	const container = document.getElementById("root");
+	const root = ReactDOM.createRoot(container);
+	root.render(<App />);
+</script>
+</html>

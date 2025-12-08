@@ -1,0 +1,38 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+</head>
+<body>
+  <div>
+    <button>aaa</button>
+  </div>
+
+<script>
+  var btn = document.querySelector('button')
+  var div = document.querySelector('div')
+  var body = document.body
+
+  btn.addEventListener('click', e => {
+    console.log(1)
+    e.stopPropagation()
+    console.log(3)
+  })
+  btn.addEventListener('click', e => {
+    console.log(2)
+  })
+
+
+  div.addEventListener('click', e => {
+    console.log('div click')
+  })
+
+  body.addEventListener('click', e => {
+    console.log('body click')
+  })
+</script>
+</body>
+</html>

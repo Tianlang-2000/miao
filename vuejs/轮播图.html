@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>轮播</title>
+  <script src="https://cdn.tailwindcss.com "></script>
+</head>
+<body>
+  <div id="app">
+    <slider :imgs="['https://www.12306.cn/index/images/abanner05.jpg ', 
+    'https://www.12306.cn/index/images/abanner06.jpg ', 
+    'https://www.12306.cn/index/images/abanner01.jpg ']"></slider>
+    <input type="checkbox" v-model="showCats">
+    <slider :imgs="cats" v-if="showCats" autoplay width="200px" height="150px">
+      
+    </slider>
+  </div>
+</body>
+<script src="vue-2.7.16.js"></script>
+  <script>
+    Vue.component("slider", {
+      props: {
+        imgs: Array,
+        width: {
+          type: [Number, String],
+          default: "300px" 
+        },
+        height: {
+          type: [Number, String],
+          default: "200px"
+        },
+        autoplay: Boolean,
+      },
+      template: `
+        <div :style="{width,height}" class="relative border border-black">
+          <img :src="imgs[currentIdx]" class="w-full h-full"/>
+          <button
+            @click="prev"
+            class="absolute h-4 top-1/2 -translate-y-1/2">
+            prev
+          </button>
+          <button
+            @click="next"
+            class="absolute h-4 top-1/2 right-0 -translate-y-1/2">
+            next
+          </button>
+          <ul class="flex absolute bottom-0 w-full justify-center">
+            <li 
+              v-for="(url, idx) of imgs"
+              :key="url"
+              @click="currentIdx = idx"
+              :class="{
+              'bg-red-500': currentIdx == idx,
+              'bg-slate-500': currentIdx != idx
+              }"
+              class="cursor-pointer w-1 h-1 rounded-full"></li>
+            </ul>
+          </div>
+      `,
+      data() {
+        return {
+          currentIdx: 0,
+        }
+      },
+      methods: {
+        prev() {
+          this.currentIdx--
+          if(this.currentIdx == -1) {
+            this.currentIdx = this.imgs.length - 1
+          }
+        },
+        next() {
+          this.currentIdx++
+          if(this.currentIdx == this.imgs.length) {
+            this.currentIdx = 0
+          }
+        },
+      },
+      mounted() {
+          if(this.autoplay) {
+            this.autoplayIntervalId = setInterval(() => {
+              this.next()
+            }, 2000)
+          }
+        },
+      beforeDestroy() {
+        clearInterval(this.autoplayIntervalId)
+      }
+    })
+    let app = new Vue({
+      el: '#app',
+      data () {
+        return {
+          cats: [],
+          showCats: true
+      }},
+      async mounted() {
+        this.cats = (await fetch('https://xieranmaya.github.io/images/cats/cats.json').then(it => it.json())).map(it => it.fullUrl)
+      }
+    })
+  </script>
+</html>

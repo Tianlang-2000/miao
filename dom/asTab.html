@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>asTab</title>
+</head>
+<body>
+  <div>
+    <div data-tabname="所有">safdssdf</div>
+    <div data-tabname="文档">eqrwqrwrrrr</div>
+    <div data-tabname="详情">ggfggfgthhh</div>
+  </div>
+  <script>
+    function asTabs(node) {
+      let childs = Array.from(node.children)
+      let buttons = []
+      let childDiv = document.createElement('div')
+      let buttonDiv = document.createElement('div')
+      let currentDisplayIndex = 0
+
+      for (let i = 0; i < childs.length; i++) {
+        // 处理每个child
+        let child = childs[i]
+        child.style.display = 'none'
+        childDiv.append(child)
+
+        // 处理这次child的按钮
+        let btn = document.createElement('button')
+        btn.textContent = child.dataset.tabname
+        buttonDiv.append(btn)
+        buttons.push(btn)
+
+        // 闭包的点击事件
+        btn.addEventListener('click', e => {
+          buttons[currentDisplayIndex].style.color = 'black'
+          btn.style.color = 'red'
+
+          child.style.display = 'block'
+          child[currentDisplayIndex].style.display = 'none'
+          currentDisplayIndex = i
+        })
+      }
+      buttons[0].click()
+
+      node.append(buttonDiv, childDiv)
+    }
+    asTabs(document.querySelector('div'))
+  </script>
+</body>
+</html>

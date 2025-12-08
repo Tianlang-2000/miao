@@ -1,0 +1,224 @@
+
+<script>
+  function rowHeights(rows) {
+    return rows.map(row => {
+      return Math.max(...row.map(cell => cell.minHeight()))
+    })
+  }
+  // function rowHeights(rows) {
+  //   return rows.map(function (row) {
+  //     return row.reduce(function (max, cell) {
+  //       return Math.max(max, cell.minHeight());
+  //     }, 0);
+  //   });
+  // }
+  function colWidths(rows) {
+    return rows[0].map((_, colIdx) => {
+      return Math.max(...rows.map(row => {
+        return row[colIdx]
+      }).map(cell => cell.minWidth()))
+    })
+  }
+  // function colWidths(rows) {
+  //   return rows[0].map(function (_, i) {
+  //     return rows.reduce(function (max, row) {
+  //       return Math.max(max, row[i].minWidth());
+  //     }, 0);
+  //   });
+  // }
+  function drawTable(rows) {
+    var heights = rowHeights(rows);
+    var widths = colWidths(rows);
+    function drawLine(blocks, lineNo) {
+      return blocks.map(function (block) {
+        return block[lineNo];
+      }).join(" ");
+    }
+    function drawRow(row, rowNum) {
+      var blocks = row.map(function (cell, colNum) {
+        return cell.draw(widths[colNum], heights[rowNum]);
+      });
+      return blocks[0].map(function (_, lineNo) {
+        return drawLine(blocks, lineNo);
+      }).join("\n");
+    }
+    return rows.map(drawRow).join("\n");
+  }
+
+  class TextCell {
+    constructor(text) {
+      this.lines = text.split('\n')
+    }
+    minWidth() {
+      return Math.max(...this.lines.map(line => line.length))
+    }
+    minHeight() {
+      return this.lines.length
+    }
+    draw(width, height) {
+      var result = []
+      for (var i = 0; i < height; i++) {
+        var line = this.lines[i] || ''
+        while(line.length < width) {
+          line += ' '
+        }
+        result.push(line)
+      }
+      return result
+    }
+  }
+  class HeaderCell {
+    constructor(text) {
+      this.lines = text.split('\n')
+    }
+    minWidth() {
+      return Math.max(...this.lines.map(line => line.length)) + 2
+    }
+    minHeight() {
+      return this.lines.length + 2
+    }
+    draw(width, height) {
+      var border = '+' + '-'.repeat(width - 2) + '+'
+      var result = [border]
+      for (var i = 0; i < height - 2; i++) {
+        var line = this.lines[i] || ''
+        while(line.length < width - 2) {
+          line += ' '
+        }
+        result.push('|' + line + '|')
+      }
+      result.push(border)
+      return result
+    }
+  }
+  class BorderCell {
+    constructor(cell) {
+      this.cell = cell
+    }
+    minWidth() {
+      return this.cell.minWidth() + 2
+    }
+    minHeight() {
+      return this.cell.minHeight() + 2
+    }
+    draw(width, height) {
+      var ret = this.cell.draw(width - 2, height - 2)
+      for (var i = 0 ; i < ret.length; i++) {
+        ret[i] = '|' + ret[i] + '|'
+      }
+      var upBorder = '#' + '-'.repeat(width - 2) + '#'
+
+      ret.unshift(upBorder)
+      ret.push(upBorder)
+      return ret
+    }
+  }
+  class UnderlinedCell {
+    constructor(textCell) {
+      this.textCell = textCell
+    }
+    minWidth() {
+      return this.textCell.minWidth()
+    }
+    minHeight() {
+      return this.textCell.minHeight() + 1
+    }
+    draw(width, height) {
+      var ret = this.textCell.draw(width, height - 1)
+      ret.push('-'.repeat(width))
+      return ret
+    }
+  }
+
+  class RightAlignedTextCell {
+    constructor(text) {
+      this.lines = text.split('\n')
+    }
+    minWidth() {
+      return Math.max(...this.lines.map(it => ))
+    }
+    minHeight() {
+      return this.textCell.minHeight() + 1
+    }
+    draw(width, height) {
+      var ret = this.textCell.draw(width, height - 1)
+      ret.push('-'.repeat(width))
+      return ret
+    }
+  }
+
+  // class 电源 {
+  //   constructor() {
+  //     this.电线 = new 电线()
+  //     this.散热器 = new 散热器()
+  //   }
+  // }
+  // class 吹风机 {
+  //   constructor() {
+  //     this.电源 = new 电源()
+  //     this.电机 = new 电机()
+  //     this.加热器 = new 加热器()
+  //   }
+  //   start() {
+  //     this.电源.start()
+  //     this.电机.start()
+  //   }
+  //   up() {
+  //     this.加热器.start()
+  //   }
+  //   stop() {
+  //     this.加热器.stop()
+  //     this.电机.stop()
+  //     this.电源.stop()
+  //   }
+  // }
+  var table = [
+    [new UnderlinedCell(new TextCell('zhangshan')), new TextCell('100'), new TextCell('female'), new TextCell('female')],
+    [new HeaderCell('name'), new HeaderCell('score'), new HeaderCell('sex'), new TextCell('fe\nma\nl\ne')],
+    [new BorderCell(new UnderlinedCell(new TextCell('zhangshan'))), new TextCell('100'), new TextCell('female'), new TextCell('female')],
+    [new TextCell('wang'), new TextCell('99'), new TextCell('male'), new TextCell('female')],
+  ]
+
+  var s = drawTable(table)
+
+  console.log(s)
+
+
+  var MOUNTAINS = [
+    {name: "Kilimanjaro", height: 5895, country: "Tanzania"},
+    {name: "Everest", height: 8848, country: "Nepal"},
+    {name: "Mount Fuji", height: 3776, country: "Japan"},
+    {name: "Mont Blanc", height: 4808, country: "Italy/France"},
+    {name: "Vaalserberg", height: 323, country: "Netherlands"},
+    {a: 1, name: "Denali", height: 6168, country: "United States"},
+    {name: "Popocatepetl",  country: "Mexico", height: 5465, a: 1}
+  ];
+
+  var hills = []
+
+  var headerNames = Object.keys(MOUNTAINS[0])
+  var harder = Object.keys(MOUNTAINS[0]).map(it => new HeaderCell(it))
+  hills.push(header)
+
+  for (var mountain of MOUNTAINS) {
+    var row = []
+    for (var key of headerNames) {
+      var val = mountain[key]
+      if (typeof val == 'number') {
+        row.push(new RightAlignedTextCell(String(val)))
+      } else {
+      row.push(new TextCell(String(val)))}
+    }
+    hills.push(row)
+  }
+
+  console.log(hills)
+  console.log(drawTable())
+  // 实现该函数，让其绘制一个跟console.table(objArray)类似的表格
+  // 返回表格的html代码
+  // 可以通过document.write(htmlCode)将其显示在页面中
+  function consoleTable(objArray) {
+
+  }
+
+</script>

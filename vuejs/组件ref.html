@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+</head>
+<body>
+  <div id="app">
+    <input ref="input1" type="text" :value="y" @input="y = $event.target.value">
+    <input ref="input2" type="text" v-model="y">
+    <foo-bar @baa="xxxx()" ref="el3"></foo-bar>  
+    <foo-bar ref="el4"></foo-bar>
+    <slider></slider>  
+  </div>
+</body>
+<script src="vue-2.7.16.js"></script>
+<script>
+  Vue.component('slider', {
+    template: `
+      <div>this is a slider
+        <foo-bar></foo-bar>
+      </div>
+    `
+  })
+  
+  Vue.component('foo-bar', {
+    inject: ['pi'],
+    template: `<div> 
+      foo bar
+      <button ref="btn">aaaa</button>
+      </div>
+      `,
+    mounted() {
+      //let btn = document.querySelector('button') 只能选第一个
+      console.log(this.$refs.btn)
+      console.log(this.$parent)
+      console.log(this.pi)
+    }
+  })
+
+  let app = new Vue({
+    el: '#app',
+    provide() {
+      return {
+        pi: 3.14
+      }
+    },
+    data() {
+      return {
+        x: 5,
+        y: 8
+      }
+    },
+    mounted() {
+      this.$refs.input2.select()  
+      this.$refs.input1.addEventListener('xxx', e => {})
+      console.log(this.$refs)
+
+      this.$refs.el3.$on('baa', e => {})
+    }
+  })
+</script>
+</html>

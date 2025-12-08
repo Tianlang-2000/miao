@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+</head>
+<style>
+  div {
+    border: 2px solid;
+    padding: 10px;
+  }
+  p {
+    border: 3px solid red;
+  }
+</style>
+<body>
+  <div>
+    <p>Lorem ipsum dolor sit amet consectetur, adipisicing elit. Similique reprehenderit laboriosam, impedit repellendus vitae quasi illum magnam vero accusamus aspernatur et laborum debitis, officia molestias quibusdam quidem consectetur doloremque doloribus.</p>
+  </div>
+</body>
+<script>
+  var div = document.querySelector('div')
+  function isInside(node, target) {
+    for (; node != null; node = node.parentNode) {
+      if (node == target) return true
+    }
+  }
+  div.addEventListener('mouseover', function(event) {
+    if (!isInside(event.relatedTarget, div)) {
+      div.style.backgroundColor = 'violet'
+    }
+  })
+  div.addEventListener('mouseout', function(event) {
+    if (!isInside(event.relatedTarget, div)) {
+      div.style.backgroundColor = ''
+    }
+  })
+</script>
+</html>

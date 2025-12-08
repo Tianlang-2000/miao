@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+  <style>
+    div {
+      border: 3px solid;
+      padding: 20px;
+    }
+  </style>
+</head>
+<body>
+  <div>
+    <button>aaaa</button>
+  </div>
+
+  <script>
+    var div = document.querySelector('div')
+    var button = document.querySelector('button')
+    var body = document.querySelector('body')
+
+    button.addEventListener('click', e => {
+      console.log('button click')
+    })
+    div.addEventListener('click', e => {
+      console.log('div click maopao')
+    })
+    div.addEventListener('click', e => {
+      console.log('div click buhuo')
+    }, {
+      capture: true, 
+    }) 
+  </script>
+</body>
+</html>

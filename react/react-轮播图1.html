@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>Document</title>
+	<script src="react.development.js"></script>
+    <script src="react-dom.development.js"></script>
+
+    <!-- Don't use this in production: -->
+    <script src="babel.min.js"></script>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body>
+	<div id="root"></div>
+	<script type="text/babel" data-presets="react">
+		let { useState } = React
+		
+		function Carousel({ imgs }) {
+			let [i, setI] = useState(0)
+
+			function prev() {
+				setI(i => i - 1 < 0 ? imgs.length : i - 1)
+			}
+			function next() {
+				setI(i => i + 1 >= imgs.length ? 0 : i + 1)
+			}
+
+			return (
+				<div className="w-[200px] h-[150px] border relative">
+					<a className="absolute w-full h-full" target="_blank" href={imgs[i].link}>
+						<img className="block w-full h-full" src={imgs[i].imgUrl}/>
+					</a>
+					<button className="absolute left-0 w-4 h-4 top-1/2" onClick={prev}>prev</button>
+					<button className="absolute right-0 w-4 h-4 top-1/2" onClick={next}>next</button>
+				</div>
+			)
+		}
+		function MyApp() {
+			return (
+				<div>
+					<Carousel imgs={
+						[
+							{
+                imgUrl: 'https://dummyimage.com/600x400/000/fff',
+                link: ''
+              },
+              {
+                imgUrl: 'https://dummyimage.com/600x400/f0f/abc',
+                link: '',
+              },
+						]
+					}	/>
+				</div>
+			)
+		}
+
+		const container = document.getElementById('root')
+		const Rroot = ReactDOM.createRoot(container)
+		Rroot.render(<MyApp/>)
+	</script>
+</body>
+</html>

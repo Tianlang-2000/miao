@@ -1,0 +1,35 @@
+<input type="text" id="field">
+<div id="suggestions" style="cursor: pointer"></div>
+<script>
+  var input = document.querySelector('input')
+  var suggest = document.querySelector('#suggestions')
+  var displayTime = 0
+  
+  input.addEventListener('input', (e) => {
+    text = input.value.trim()
+    var inputTime = Date.now()
+
+    getSuggestion(text, suggestions => {
+      if (inputTime > displayTime) {
+        displayTime = inputTime
+        suggest.textContent = ''
+        for (s of suggestions) {
+          var sDiv = document.createElement('div')
+          sDiv.textContent = s
+          suggest.append(sDiv)
+        }
+      }
+    })
+  })
+
+  function getSuggestion(text, f) {
+    var result = []
+    if (text == '') return []
+    for (let i = 0; i < 10; i++) {
+      result.push(text + i)
+    }
+    setTimeout(() => {
+      f(result)
+    }, 50 + Math.random() * 400)
+  }
+</script>

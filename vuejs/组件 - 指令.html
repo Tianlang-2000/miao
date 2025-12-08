@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+</head>
+<body>
+  <div id="app">
+    <!--<span v-focus:dsfasdf.dsfs.dsf="list[5] * 5 + 3" >{{ list[2] }}</span>-->
+    <!--<input type="text" v-focus>-->
+    <!--<foo-bar></foo-bar>
+    <foo-baz></foo-baz>-->
+    <ul v-infinite-scroll="load" style="height: 100px; overflow: auto;">
+      <li v-for="i of count" style="height: 20px;">{{ i }}</li>
+    </ul>
+  </div>
+</body>
+<script src="vue-2.7.16.js"></script>
+<script>
+
+  let currentTimeMixin = {
+    data() {
+      return {
+        currentTime: new Date()
+      }
+    },
+    mounted() {
+      setInterval(()=> {
+        this.currentTime = new Date()
+      }, 1000)
+    },
+    beforeDestroy() {
+      clearInterval(this.Interval)
+    }
+  }
+  
+  //Vue.directive('focus', {
+  //  bind() {
+
+  //  },
+  //  inserted: function(el, binding, vnode, oldVnode) {
+  //    el.focus()
+  //  },
+  //  update() {
+
+  //  },
+  //  componentUpdate() {
+
+  //  },
+  //  unbind() {
+
+  //  }
+  //})
+  //import { currentTimeMixin } from '.mixins.js'
+  Vue.directive('infinite-scroll', {
+    inserted(el, binding) {
+      el.addEventListener('scroll', e => {
+        if(el.scrollHeight - el.scrollTop - el.offsetHeight < 20) {
+          binding.value()
+        }
+      })
+    }
+  })
+  //Vue.component('foo-bar', {
+  //  mixins: [currentTimeMixin],
+  //  template:`
+  //    <div>{{ currentTime }}</div>
+  //  `,
+  //  data() {
+  //    return {
+  //      x: 1,
+  //      y: 1,
+  //    }
+  //  },
+  //  mounted() {
+
+  //  }
+  //})
+  
+  //Vue.component('foo-baz', {
+  //  mixins: [currentTimeMixin],
+  //  template:`
+  //    <div>{{ currentTime }}</div>
+  //  `,
+  //})
+  let app = new Vue({
+    el: '#app',
+    data() {
+      return {
+        list: [1,2,3,4,5],
+        x: 5,
+        y: 8,
+        count: 10,
+      }
+    },
+    methods: {
+      load() {
+        this.count += 3
+      }
+    }
+  })
+</script>
+</html>

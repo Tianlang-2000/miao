@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body>
+  <div id="app">
+    <!--{{ obj }}-->
+     <json-viewer :data="obj"></json-viewer>   
+  </div>
+</body>
+<script src="vue-2.7.16.js"></script>
+<script>
+  Vue.component('json-viewer', {
+    props: ['data'],
+    template: `
+      <span v-if="typeof data == 'number'" class="text-blue-500">{{ data }}</span>
+      <span v-else-if="typeof data == 'string'" class="text-red-500">"{{ data }}"</span>
+      <span v-else-if="typeof data == 'boolean'" class="text-blue-500">{{ data }}</span>
+      <span v-else-if="data === null" class="text-slate-300">null</span>
+      <span v-else-if="Array.isArray(data)">
+        <span @click="open = !open">{{ open ? '-' : '+' }}</span>[
+          <span v-show="open">
+          <div v-for="(item,idx) of data">
+            <json-viewer :data="item"></json-viewer>{{idx < size - 1 ? ',': ''}}
+          </div>
+          </span>
+          <span v-show="!open">...</span>
+        ]
+      </span>
+      <span v-else-if="typeof data == 'object'">
+        <span @click="open = !open">{{ open ? '-' : '+' }}</span>{
+          <span v-show="open">
+          <div v-for="(item,key,idx) of data" class="ml-4">
+          {{key}}: <json-viewer :data="item"></json-viewer>{{idx < size - 1 ? ',': ''}}
+          </div>
+          </span>
+          <span v-show="!open">...</span>
+        }
+      </span>
+    `,
+    data() {
+      return {
+        open: true,
+        size: Object.keys(this.data ?? {}).length
+      }
+    }
+  })
+  let app = new Vue({
+    el: '#app',
+    provide() {
+      return {
+        pi: 3.14
+      }
+    },
+    data() {
+      return {
+        x: 5,
+        y: 8,
+        obj: {
+          a:1,b:2,
+          x: "sdfsdf", y: "sdfsad",
+          z: true, w: null,
+          c: {
+            X:3,y:4,
+            d: [1,2, {foo: 8, bar: 9}]
+          }
+        }
+      }
+    },
+    mounted() {
+    }
+  })
+</script>
+</html>

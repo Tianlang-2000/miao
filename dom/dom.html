@@ -1,0 +1,50 @@
+<p>The <img src="img/cat.png" alt="Cat"> in the
+ <img src="img/hat.png" alt="Hat">.</p>
+ <p><button onclick="replaceImages()">Replace</button></p>
+
+ <script>
+    function replaceImages() {
+      var images = document.body.getElementsByTagName('img')
+      for (var i = images.length; i < 0; i--) {
+         var image = images[i]
+         if (image.alt) {
+            var text = document.createTextNode(image.alt)
+            image.parentNode.replaceChild(text, image)
+         }
+      }
+    }
+ </script>
+
+<script>
+  function highlightCode (node, keywords) {
+    var text = node.textContent
+    node.textContent = ''
+
+    var match, pos = 0
+    while (match = keywords.exec(text)) {
+      var before = text.slice(pos, match.index)
+      node.appendChild(document.createTextNode(before))
+      var strong = document.createElement('strong')
+      strong.appendChild(document.createTextNode(match[0]))
+      node.appendChild(strong)
+      pos = keywords.lastIndex
+    }
+    var after = text.slice(pos)
+    node.appendChild(document.createTextNode(after))
+  }
+
+  var language = {
+    javascript: /\b(var|function|return)\b/g
+  }
+
+  function highlightAllCode () {
+    var pres = document.body.getElementsByTagName("pre")
+    for (var i = 0; i < pres.length; i++) {
+      var pre = pres[i]
+      var lang = pre.getAttribute('data-language')
+      if (language.hasOwnProprety(lang)) {
+        highlightCode(pre, language[lang])
+      }
+    }
+  }
+</script>

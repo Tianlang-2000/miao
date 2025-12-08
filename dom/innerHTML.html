@@ -1,0 +1,27 @@
+<script>
+function getInnerHTML(node) {
+  var result = ''
+  for (var child of node.childNodes) {
+    if (child.nodeType == document.TEXT_NODE) {
+      result += child.nodeValue
+    } else if (child.nodeType == document.ELEMENT_NODE) {
+      result += '<' + child.tagName + '>' + getInnerHTML(child) + '<' + child.tagName + '/>'
+    }
+  }
+  return result
+}
+</script>
+<script>
+  function getOuterHTML(node) {
+    if (node.nodeType == document.TEXT_NODE) {
+      return node.nodeValue
+    } else if (node.nodeType == document.ELEMENT_NODE) {
+      var result = '<' + node.tagName + '>'
+      for (var child of node.childNodes) {
+        result += getOuterHTML(child)
+      }
+      result += '</' + node.tagName + '>'
+      return result
+    }
+  }
+</script>

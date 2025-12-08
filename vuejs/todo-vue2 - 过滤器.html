@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+  <style>
+    ul.show-active li.completed {
+      display: none;
+    }
+    ul.show-completed li.active {
+      display: none;
+    }
+  </style>
+</head>
+<body>
+  <div id="app">
+    <h1>todos</h1>
+    <div>
+      <input type="checkbox" v-show="todos.length > 0" :checked="isAllCompleted" @click="toggleAll()">
+      <input type="text" @keyup="addTodo($event)">
+    </div>
+    <ul :class="['todo-list', `show-${visibleType}`]">
+      <li :key="todo.text" v-for="(todo, i) of todos" :class="{completed: todo.completed, active: !todo.completed}">
+        <input type="checkbox" v-model="todo.completed">
+        <input v-focus v-if="editingIdx == i" @blur="editingIdx = -1" @keyup.enter="editOk($event, todo)" :value="todo.text" type="text">
+        <span v-else @dblclick="editingIdx = i">{{ todo.text }}</span>
+        <button @click="deleteTodo(i)">x</button>
+      </li>
+    </ul>
+    <div>
+      <span>xx{{ leftCount }} items left</span>
+      <div>
+        <label><input type="radio" @click="visibleType = 'all'" :checked= 'visibleType == "all"' name="visible-type">All</label>
+        <label><input type="radio" @click="visibleType = 'active'" :checked= 'visibleType == "active"' name="visible-type">Active</label>
+        <label><input type="radio" @click="visibleType = 'completed'" :checked= 'visibleType == "completed"' name="visible-type">Completed</label>
+      </div>
+      <button v-show="showClearButton" @click="clearCompleted()">clear completed</button>
+    </div>
+  </div>
+</body>
+<script src="vue-2.7.16.js"></script>
+<script>
+
+  Vue.directive('focus', {
+    inserted(el) {
+      el.focus()
+    }
+  })
+  var app = new Vue({
+    el: '#app',
+    data() {
+      return {
+        todos: [{text: 'eat', completed: false}, {text: 'sleep', completed: true}],
+        visibleType: 'all',
+        editingIdx: -1,
+      }
+    },
+    computed: {
+      leftCount() {
+        return this.todos.filter(it => it.completed == false).length
+      },
+      isAllCompleted() {
+        return this.todos.every(it => it.completed)
+      },
+      showClearButton() {
+        return this.todos.some(it => it.completed)
+      }
+    },
+    methods: {
+      deleteTodo(idx) {
+        this.todos.splice(idx, 1)
+      },
+      toggleAll() {
+        if (this.todos.every(it => it.completed)) {
+          this.todos.forEach(todo => {
+            this.todo.completed = false
+          })
+        } else {
+          this.todos.forEach(todo => {
+            this.todo.completed = true
+          })
+        }
+      },
+      addTodo(e) {
+        if(e.key == 'Enter') {
+          var text = e.target.value.trim()
+          if(text) {
+            this.todos.push({text, completed: false})
+            e.target.value = ''
+          }
+        }
+      },
+      editOk(e, todo) {
+        todo.text = e.target.value.trim()
+        this.editingIdx = -1
+      },
+      clearCompleted() {
+         this.todos = this.todos.filter(it => it.completed == false)
+      }
+    }
+  })
+</script>
+</html>

@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>switch</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+</head>
+
+<body>
+  <div id="app">
+    <my-switch v-model="show">
+
+    </my-switch>
+    <pagination :total="56" :layout="'prev, pager, next'" v-model="currentPageNumber"></pagination>
+  </div>
+</body>
+<script src="vue-2.7.16.js"></script>
+<script>
+  Vue.component('my-switch', {
+    props: {
+      value: {
+        type: Boolean,
+      }
+    },
+    template: `
+      <span @click="$emit('input', !value)" class="relative inline-block w-4 h-2 border rounded-full">
+        <span :class="{'left-2': value}" class="absolute inline-block w-2 h-2 rounded-full bg-red-500"></span>
+        </span>
+    `,
+    data() {
+      return {
+
+      }
+    }
+  })
+  
+  Vue.component('pagination', {
+    props: {
+      value: {
+        type: Number
+      },
+      layout: {
+        type: String
+      },
+      total: {
+        type: Number,
+        required: true
+      }
+    },
+    template: `
+      <div class="flex gap-x-1">
+        <button v-if="layout.includes('prev')" @click="dec" :disabled="current==1"><</button>
+        <ul v-if="layout.includes('pager')" class="flex gap-x-1">
+          <li v-for="p of pageCount" :class="{'text-red-500': p == current}" @click="current = p" class="cursor-pointer">{{ p }}</li>  
+        </ul>
+        <button v-if="layout.includes('next')" @click="inc" :disabled="current==pageCount">></button>
+      </div>
+    `,
+    watch: {
+      current() {
+        this.$emit('input', this.current)
+      },
+      value() {
+        this.current = this.value
+      }
+    },
+    data() {
+      return {
+        current: 1,
+        pageCount: Math.ceil(this.total / 10)
+      }
+    },
+    methods: {
+      dec() {
+        this.current--
+      },
+      inc() {
+        this.current++
+      }
+    }
+  })
+
+  let app = new Vue({
+    el: '#app',
+    data() {
+      return {
+        show: true,
+        currentPageNumber: 1
+      }
+    }
+  })
+</script>
+
+</html>

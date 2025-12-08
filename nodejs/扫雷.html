@@ -1,0 +1,201 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <title>扫雷游戏</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      text-align: center;
+      background: #f4f4f4;
+    }
+    h1 {
+      margin-top: 20px;
+    }
+    #game {
+      display: inline-block;
+      margin-top: 20px;
+      border: 2px solid #333;
+      background: #bbb;
+    }
+    .row {
+      display: flex;
+    }
+    .cell {
+      width: 30px;
+      height: 30px;
+      border: 1px solid #666;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      background: #ccc;
+      cursor: pointer;
+      font-weight: bold;
+      user-select: none;
+    }
+    .cell.revealed {
+      background: #eee;
+      cursor: default;
+    }
+    .cell.mine {
+      background: red;
+      color: white;
+    }
+    .cell.flag {
+      background: #ffc;
+      color: red;
+    }
+  </style>
+</head>
+<body>
+  <h1>扫雷游戏</h1>
+  <button onclick="startGame()">重新开始</button>
+  <div id="game"></div>
+
+  <script>
+    const rows = 9;
+    const cols = 9;
+    const mineCount = 10;
+    let board = [];
+    let gameOver = false;
+
+    function startGame() {
+      board = [];
+      gameOver = false;
+      const gameDiv = document.getElementById("game");
+      gameDiv.innerHTML = "";
+
+      // 初始化棋盘
+      for (let r = 0; r < rows; r++) {
+        const row = [];
+        const rowDiv = document.createElement("div");
+        rowDiv.classList.add("row");
+        for (let c = 0; c < cols; c++) {
+          const cell = {
+            row: r,
+            col: c,
+            mine: false,
+            revealed: false,
+            flagged: false,
+            neighborMines: 0,
+            element: document.createElement("div"),
+          };
+          cell.element.classList.add("cell");
+          cell.element.addEventListener("click", () => revealCell(cell));
+          cell.element.addEventListener("contextmenu", (e) => {
+            e.preventDefault();
+            toggleFlag(cell);
+          });
+          row.push(cell);
+          rowDiv.appendChild(cell.element);
+        }
+        board.push(row);
+        gameDiv.appendChild(rowDiv);
+      }
+
+      // 随机放置雷
+      let placedMines = 0;
+      while (placedMines < mineCount) {
+        let r = Math.floor(Math.random() * rows);
+        let c = Math.floor(Math.random() * cols);
+        if (!board[r][c].mine) {
+          board[r][c].mine = true;
+          placedMines++;
+        }
+      }
+
+      // 计算周围雷数
+      for (let r = 0; r < rows; r++) {
+        for (let c = 0; c < cols; c++) {
+          if (!board[r][c].mine) {
+            board[r][c].neighborMines = countNeighborMines(r, c);
+          }
+        }
+      }
+    }
+
+    function countNeighborMines(r, c) {
+      let count = 0;
+      for (let dr = -1; dr <= 1; dr++) {
+        for (let dc = -1; dc <= 1; dc++) {
+          if (dr === 0 && dc === 0) continue;
+          const nr = r + dr;
+          const nc = c + dc;
+          if (nr >= 0 && nr < rows && nc >= 0 && nc < cols && board[nr][nc].mine) {
+            count++;
+          }
+        }
+      }
+      return count;
+    }
+
+    function revealCell(cell) {
+      if (gameOver || cell.revealed || cell.flagged) return;
+      cell.revealed = true;
+      cell.element.classList.add("revealed");
+
+      if (cell.mine) {
+        cell.element.classList.add("mine");
+        cell.element.innerText = "💣";
+        endGame(false);
+        return;
+      }
+
+      if (cell.neighborMines > 0) {
+        cell.element.innerText = cell.neighborMines;
+      } else {
+        // 扩散揭示周围空格
+        for (let dr = -1; dr <= 1; dr++) {
+          for (let dc = -1; dc <= 1; dc++) {
+            const nr = cell.row + dr;
+            const nc = cell.col + dc;
+            if (nr >= 0 && nr < rows && nc >= 0 && nc < cols) {
+              revealCell(board[nr][nc]);
+            }
+          }
+        }
+      }
+
+      checkWin();
+    }
+
+    function toggleFlag(cell) {
+      if (gameOver || cell.revealed) return;
+      cell.flagged = !cell.flagged;
+      cell.element.classList.toggle("flag", cell.flagged);
+      cell.element.innerText = cell.flagged ? "🚩" : "";
+    }
+
+    function endGame(win) {
+      gameOver = true;
+      for (let r = 0; r < rows; r++) {
+        for (let c = 0; c < cols; c++) {
+          const cell = board[r][c];
+          if (cell.mine) {
+            cell.element.innerText = "💣";
+            cell.element.classList.add("revealed");
+          }
+        }
+      }
+      setTimeout(() => {
+        alert(win ? "🎉 恭喜，你赢了！" : "💥 游戏结束！");
+      }, 100);
+    }
+
+    function checkWin() {
+      let revealedCount = 0;
+      for (let r = 0; r < rows; r++) {
+        for (let c = 0; c < cols; c++) {
+          if (board[r][c].revealed) revealedCount++;
+        }
+      }
+      if (revealedCount === rows * cols - mineCount) {
+        endGame(true);
+      }
+    }
+
+    // 启动游戏
+    startGame();
+  </script>
+</body>
+</html>

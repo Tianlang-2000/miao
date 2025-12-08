@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>todo</title>
+</head>
+<body>
+  <div id="app"></div>
+</body>
+<script>
+  let container = document.querySelector('#app')
+  let todos = [{text: 'eat', completed: false}, {text: 'sleep', completed: true}]
+  let selectedCategory = 'all'
+  let editingIdx = -1
+
+  renderTodoHTML()
+
+  container.addEventListener('dlbclick', e => {
+    if (e.target.matches('li span')) {
+      editingIdx = (e.target.dataset.idx)
+      renderTodoHTML()
+    }
+  })
+
+  container.addEventListener('click', e => {
+    if (e.target.matches('input[type="radio"]')) {
+      selectedCategory = e.target.value
+      renderTodoHTML()
+    } 
+    if (e.target.matches('button.delete')) {
+      todos.splice(e.target.dataset.idx, 1)
+      renderTodoHTML() 
+    }
+    if (e.target.matches('toggle-all')) {
+      if (todos.every(it => it.completed)) {
+        todos.forEach(todo => {
+          todo.completed = false
+        })
+      } else {
+        todos.forEach(todo => {
+          todo.completed = true
+        })
+      }
+      renderTodoHTML()
+    }
+    if (e.target.matches('toggle-one')) {
+      let idx = e.dataset.idx
+      todos[idx].completed = !todos[idx].completed
+    }
+    if ()
+  })
+  function renderTodoHTML() {
+    container.innerHTML = `
+    <div>
+      <div>
+        <input type='checkbox' class="toggle-all"${todos.every(it => it.completed) ? 'checked' : ''}/>
+        <input/>
+      </div>
+      <ul>
+        ${
+          todos.filter(it => {
+            if (selectedCategory == 'all') {
+              return true
+            } else if (selectedCategory == 'active') {
+              return it.completed == false
+            } else {
+              return it.completed == true
+            }
+          }).map((todo, i) => {
+            if (editingIdx == i) {
+              return `
+                <li>
+                  <input type='checkbox' data-idx="${i}" class="toggle-one" ${todo.completed ? 'checked': ''}/>
+                  <input value="${todo.text}" />
+                  <button data-idx="${i}" class="delete">x</button>
+                </li>
+              `
+            } else {
+              return `
+                <li>
+                  <input type='checkbox' data-idx="${i}" class="toggle-one" ${todo.completed ? 'checked': ''}/>
+                  <span data-idx="${i}">${todo.text}</span>
+                  <button data-idx="${i}" class="delete">x</button>
+                </li>
+              `
+            }
+          }).join('')
+        }
+      </ul>
+      <div>
+        <span>${todo.filter(it => it.completed == false).length} items left</span>
+        <div>
+          <label><input type='radio' value='all' ${selectedCategory = 'all' ? 'checked' : ''}>All</label>
+          <label><input type='radio' value='active' ${selectedCategory = 'active' ? 'checked' : ''}>Active</label>
+          <label><input type='radio' value='completed' ${selectedCategory = 'completed' ? 'checked' : ''}>Completed</label>  
+        </div>
+        ${todos.some(it => it.completed) ? '<button class="clear-btn">clear completed</button>' : ''}
+      </div>
+    </div>
+
+    
+    `
+  }
+</script>
+</html>

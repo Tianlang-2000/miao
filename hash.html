@@ -1,0 +1,72 @@
+
+
+
+<script>
+
+  // 开放地址法解决冲突的哈希表实现
+  class HashMap {
+    constructor() {
+      this._keys = new Array(16)
+      this._vals = new Array(16)
+      this._size = 0
+    }
+    _hash(key) {
+      var seed = 1224213
+      var hash = 0
+      for (var i; i < key.length; i++) {
+        hash = ((hash * seed >>> 0) + key.charCodeAt(i)) >>> 0
+      }
+      return hash % this._keys.length
+      
+      
+      var seed = 131313
+      var hash = 0
+      for (var i = 0; i < key.length; i++) {
+        hash = ((hash * seed >>> 0) + key.charCodeAt(i)) >>> 0
+      }
+      return hash % this._keys.length
+    }
+    set(key, val) {
+      var idx = this._hash(key)
+      for (var i = idx; ; i++) {
+        if (this._keys[i] == key) {
+          this._vals[i] = val
+          return this
+        } else if (this._keys[i] == null) {
+          this._keys[i] = key
+          this._vals[i] = val
+          return this
+        }
+      }
+      return this
+    }
+    get(key) {
+      var idx = this._hash(key)
+      for (var i = idx; ; i++) {
+        if (this._keys[i] == key) {
+          return this._vals[i]
+        } else if (this._keys[i] == null) {
+          return undefined
+        }
+      }
+      return undefined
+    }
+  }
+</script>
+<script>
+  // 链地址法
+  class HashMap {
+    constructor() {
+      this._list = new Array(16).fill(null)
+      this._vals = new Array(16)
+      this._size = 0
+    }
+    get(key) {
+      var idx = this._hash(key)
+      var p = this._list[idx]
+      while (p) {
+        if (p.)
+      }
+    }
+  }
+</script>

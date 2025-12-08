@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>solar system</title>
+</head>
+<style>
+  #sun {
+    width: 50px;
+    height: 50px;
+    background-color: orange;
+    border-radius: 9999px;
+    position: fixed;
+  }
+  #earth {
+    width: 30px;
+    height: 30px;
+    background-color: blue;
+    border-radius: 9999px;
+    position: fixed;
+  }
+  #moon {
+    width: 10px;
+    height: 10px;
+    background-color: gray;
+    border-radius: 9999px;
+    position: fixed;
+  }
+</style>
+<body>
+  
+  <div id="sun"></div>
+  <div id="earth"></div>
+  <div id="moon"></div>
+</body>
+<script>
+  var sun = document.querySelector('#sun')
+  var earth = document.querySelector('#earth')
+  var moon = document.querySelector('#moon')
+
+
+  requestAnimationFrame(function ani(time) {
+    var angle1 = time * 0.001
+    var sunX = Math.sin(angle1) * 30 - 25 + window.innerWidth / 2
+    var sunY = Math.cos(angle1) * 30 - 25 + window.innerHeight / 2
+    sun.style.left = sunX + 'px'
+    sun.style.top = sunY + 'px'
+
+    var angle2 = time * 0.001
+    var earthX = Math.sin(angle2) * 300 - 15 + sunX + 25
+    var earthY = Math.cos(angle2) * 300 - 15 + sunY + 25
+    earth.style.left = earthX + 'px'
+    earth.style.top = earthY + 'px'
+
+    var angle3 = time * 0.365
+    var moonX = Math.sin(angle3) * 60 - 5 + earthX + 15
+    var moonY = Math.cos(angle3) * 60 - 5 + earthY + 15
+    moon.style.left = moonX + 'px'
+    moon.style.top = moonY + 'px'
+
+    requestAnimationFrame(ani)
+  })
+</script>
+</html>

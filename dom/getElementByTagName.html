@@ -1,0 +1,85 @@
+<script>
+function getElementByTagName(tagName) {
+  tagName = tagName.toUpperCase()
+  var result = []
+  traverse(document.documentElement, elt => {
+    
+    if (elt.tagName == tagName) {
+      result.push(elt)
+    } 
+  })
+  return result
+}
+function traverse(node, action) {
+  if (node.nodeType == document.ELEMENT_NODE) {
+    action(node)
+    for (var child of node.children) {
+      traverse(child, action)
+    }
+  }
+}
+</script>
+<script>
+  function getElementByTagName1(node, tagName) {
+    var result = []
+    for (var child of node.children) {
+      if (child.tagName == tagName) {
+        result.push(child)
+      }
+      result.push(...getElementByTagName1(child, tagName))
+    }
+    return result
+  }
+
+
+  function getElementByTagName2(node, tagName, result = []) {
+    for (var child of node.children) {
+      if (child.tagName == tagName) {
+        result.push(child)
+      }
+      result.push(...getElementByTagName2(child, tagName, result))
+
+    }
+    return result
+  }
+</script>
+<script>
+  function getElementById(id, node) {
+    var result = null
+    traverse1(document.documentElement, el => {
+      if (el.id == id) {
+        result = el
+        return false
+      }
+    })
+    return result
+  }
+
+  function traverse1(node, action) {
+    if (node.nodeType == document.ELEMENT_NODE) {
+      if(action(node) == false) {
+        return false
+      }
+      
+      for (var child of node.children) {
+        if (traverse1(child,action) == false) {
+          return false
+        }
+      }
+    }
+  }
+
+  function getElementById1(id, node = document.documentElement) {
+    if (node.id == id) {
+      return node
+    } else {
+      for (var child of node.children) {
+        var result = getElementById1(id, child)
+        if (result) {
+          return result
+        }
+      }
+      return null
+    }
+  }
+</script>

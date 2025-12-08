@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+</head>
+<body>
+  <div id="app">
+    <span>{{ list[2] }}</span>
+    <foo-bar></foo-bar>
+    <foo-baz></foo-baz>
+  </div>
+</body>
+<script src="vue-2.7.16.js"></script>
+<script>
+
+  let currentTimeMixin = {
+    data() {
+      return {
+        currentTime: new Date()
+      }
+    },
+    mounted() {
+      setInterval(()=> {
+        this.currentTime = new Date()
+      }, 1000)
+    },
+    beforeDestroy() {
+      clearInterval(this.Interval)
+    }
+  }
+  
+  //import { currentTimeMixin } from '.mixins.js'
+
+  Vue.component('foo-bar', {
+    mixins: [currentTimeMixin],
+    template:`
+      <div>{{ currentTime }}</div>
+    `,
+    data() {
+      return {
+        x: 1,
+        y: 1,
+      }
+    },
+    mounted() {
+
+    },
+    directives: {
+    focus: {
+      // 指令的定义
+      inserted: function (el) {
+        el.focus()
+      }
+    }
+}
+  })
+  
+  Vue.component('foo-baz', {
+    mixins: [currentTimeMixin],
+    template:`
+      <div>{{ currentTime }}</div>
+    `,
+  })
+
+  let app = new Vue({
+    el: '#app',
+    data() {
+      return {
+        list: [1,2,3,4,5],
+        x: 5,
+        y: 8,
+      }
+    }
+  })
+</script>
+</html>

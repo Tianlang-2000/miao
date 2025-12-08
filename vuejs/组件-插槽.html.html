@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>lunbo</title>
+  <script src="https://cdn.tailwindcss.com "></script>
+</head>
+<body>
+  <div id="app">
+    <!-- <Common-Layout>
+      <template #header>
+        <header>wfdsfds</header>
+      </template>
+      <template #sidebar>
+        <aside>sdfsdfds</aside>
+      </template>
+      <template #main>
+        <main>dsfsdafsdaf</main>
+      </template>
+    </Common-Layout> -->
+
+    <fancy-list :data="[{name: 'a', content: 'dsfsdf'}, {name: 'b', content: 'sdfiicz'}]">
+      <!-- ({name,content}) => {
+        return <fieldset>
+          <legend>{{ it.name }}</legend>
+          <div>{{ it.content }}</div>
+        </fieldset>
+      } -->
+      <!-- <template #default="it">
+        <fieldset>
+          <legend>{{ it.name }}</legend>
+          <div>{{ it.content }}</div>
+        </fieldset>
+      </template>
+      <template #side="x">
+        <div :foo="x.bar"></div>
+      </template> -->
+      <template #up="obj">
+        {{obj.word}}
+      </template>
+      <template #list-item="data">
+        <div>
+          {{data.index}} -- {{data.item.content}}
+        </div>
+      </template>
+      <template #down="obj">
+        {{obj.word}}
+      </template>
+    </fancy-list>
+    <!-- <slider :imgs="['https://www.12306.cn/index/images/abanner05.jpg ', 
+    'https://www.12306.cn/index/images/abanner06.jpg ', 
+    'https://www.12306.cn/index/images/abanner01.jpg ']"></slider> -->
+    <!-- <Fancy-Button>
+        click me
+    </Fancy-Button> -->
+    <input type="checkbox" v-model="showCats">
+    <slider :imgs="cats" v-if="showCats" autoplay width="200px" height="150px"></slider>
+  </div>
+</body>
+<script src="vue-2.7.16.js"></script>
+  <script>
+    Vue.component("slider", {
+      props: {
+        imgs: Array,
+        width: {
+          type: [Number, String],
+          default: "300px" 
+        },
+        height: {
+          type: [Number, String],
+          default: "200px"
+        },
+        autoplay: Boolean,
+      },
+      template: `
+        <div :style="{width,height}" class="relative border border-black">
+          <img :src="imgs[currentIdx]" class="w-full h-full"/>
+          <button
+            @click="prev"
+            class="absolute h-4 top-1/2 -translate-y-1/2">
+            prev
+          </button>
+          <button
+            @click="next"
+            class="absolute h-4 top-1/2 right-0 -translate-y-1/2">
+            next
+          </button>
+          <ul class="flex absolute bottom-0 w-full justify-center">
+            <li 
+              v-for="(url, idx) of imgs"
+              :key="url"
+              @click="currentIdx = idx"
+              :class="{
+              'bg-red-500': currentIdx == idx,
+              'bg-slate-500': currentIdx != idx
+              }"
+              class="cursor-pointer w-1 h-1 rounded-full"></li>
+            </ul>
+          </div>
+      `,
+      data() {
+        return {
+          currentIdx: 0,
+        }
+      },
+      methods: {
+        prev() {
+          this.currentIdx--
+          if(this.currentIdx == -1) {
+            this.currentIdx = this.imgs.length - 1
+          }
+        },
+        next() {
+          this.currentIdx++
+          if(this.currentIdx == this.imgs.length) {
+            this.currentIdx = 0
+          }
+        },
+      },
+      mounted() {
+          if(this.autoplay) {
+            this.autoplayIntervalId = setInterval(() => {
+              this.next()
+            }, 2000)
+          }
+        },
+      beforeDestroy() {
+        clearInterval(this.autoplayIntervalId)
+      }
+    })
+    
+    Vue.component('FancyButton', {  
+      template: `
+        <button class="rounded bg-slate-500 text-while">
+          <slot>determine<slot/>
+        </button>
+      `   
+    })
+    Vue.component('CommonLayout', {
+      template: `
+        <div class="border border-black">
+          <header class="border-b border-black">
+            <slot name="header"/>
+          </header>
+          <div class="flex">
+            <aside class="w-1/4 border-r border-black"><slot name="sidebar"/></aside>
+            <main class="grow"><slot name="main"/></main>
+          </div>
+        </div>
+      `
+    })
+    
+    Vue.component('fancy-list', {
+      props: {
+        data: Array,
+      },
+      template: `
+        <div>
+          <slot name="up" word="up1111"/>
+          <ul>
+            <li v-for="(item, idx) of data">
+              <slot name="list-item" :item="item" :index="idx"/>
+            </li>    
+          </ul>
+          <slot name="down" word="down2222"/>
+        </div>
+      `
+    })
+    let app = new Vue({
+      el: '#app',
+      data () {
+        return {
+          cats: [],
+          showCats: true
+      }},
+      async mounted() {
+        this.cats = (await fetch('https://xieranmaya.github.io/images/cats/cats.json').then(it => it.json())).map(it => it.fullUrl)
+      }
+    })
+  </script>
+</html>

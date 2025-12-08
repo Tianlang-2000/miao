@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+</head>
+<body>
+  <div id="app">
+    <button-counter></button-counter>
+    <button-counter></button-counter>
+    <button-counter></button-counter>
+    <input type="text" :value="y" @input="y = $event.target.value">
+    <input type="text" v-model="y">
+  </div>
+</body>
+<script src="vue-2.7.16.js"></script>
+<script>
+
+  Vue.component('button-counter', {
+    template: `
+      <div>
+        <button @click="dec">-</button>
+        <span>{{ count }}</span>
+        <button @click="inc">+</button>
+      </div>
+    `,
+    data() {
+      return {
+        count: 0,
+      }
+    },
+    methods: {
+      dec() {
+        this.count--
+      },
+      inc() {
+        this.count++
+      }
+    }
+  })
+
+  let app = new Vue({
+    el: '#app',
+    data() {
+      return {
+        y: 8,
+      }
+    }
+  })
+</script>
+</html>

@@ -94,3 +94,13 @@ function parseQuery(query) {
   }
   return obj
 }
+
+
+
+
+getURL("data/nonsense.txt", function(content, error) {
+  if (error != null)
+    console.log("Failed to fetch nonsense.txt: " + error);
+  else
+    console.log("nonsense.txt: " + content);
+});

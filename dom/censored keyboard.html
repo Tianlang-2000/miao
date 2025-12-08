@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Censored keyboard</title>
+</head>
+<style>
+  textarea {
+    width: 100%;
+    height: 200px;
+    padding: 10px;
+    margin-top: 10px;
+    box-sizing: border-box;
+    border: 2px solid #ccc;
+    border-radius: 4px;
+  }
+</style>
+<body>
+  <textarea id="ck"></textarea>
+  <script>
+    // 防输入
+    var textarea = document.querySelector('#ck')
+    textarea.addEventListener('keypress', e => {
+      if (e.key == 'W' || e.key == 'Q' || e.key == 'X') {
+        e.preventDefault()
+      } 
+    })
+    // 防粘贴
+    textarea.addEventListener('paste', e => {
+      e.preventDefault()
+      var pasteData = e.clipboardData.getData('text/plain')
+      pasteData = pasteData.replace(/[WQX]/g, '*')
+      var from = textarea.selectionStart
+      var to = textarea.selectionEnd
+      ck.value = ck.value.slice(0,from) + pasteData + ck.value.slice(to)
+      ck.selectionEnd = ck.selectionStart = from + pasteData.length
+    })
+    
+    // 防拖拽
+    textarea.addEventListener('drop', e => {
+      e.preventDefault()
+    })
+    
+    // 防控制台操作
+    let valueDescriptor = Object.getOwnPropertyDescriptor(textarea.__proto__, 'value')
+    
+    Object.defineProperty(textarea, 'value', {
+      get: function(){
+        return valueDescriptor.get.call(textarea)
+      },
+      set: function(){
+        return valueDescriptor.set.call(textarea, val.replace(/[WQX]/g, '*'))
+      }
+    })
+  </script>
+</body>
+</html>
