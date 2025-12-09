@@ -1,0 +1,15 @@
+extend layout.pug
+
+block content
+	h2= post.title
+	p= post.content
+	hr
+	each comment in comments
+		fieldset
+			legend= comment.timeStamp
+			div= comment.content
+	hr
+	form(action='/comment' method="post")
+		textarea(name="content")
+		input(name="postId" value=post.id hidden)
+		button 提交
