@@ -1,36 +1,16 @@
 const express = require('express')
 const path = require('node:path')
 const cookieParser = require('cookie-parser')
+const Database = require('better-sqlite3')
+const svgCaptcha = require('svg-captcha') 
+
+
+const db = new Database('./bbs.sqlite3')
 
 const app = express()
 const port = 8082
 // 设置模板文件的位置
 app.set('views',  path.join(__dirname, './templates'))
-// 帖子数据
-const posts = [{
-	title: 'aaa',
-	content: 'bbbbb',
-	id: 9,
-	timeStamp: new Date().toISOString(),
-	ip: '192.168.1.1',
-}
-]
-//帖子计数
-let prevPostId = 10
-// 评论数据
-const comments = [{
-	content: '111',
-	postId: '99',
-	timeStamp: new Date().toISOString(),
-	ip: '192.168.1.1'
-}]
-// 用户数据
-const users = [{
-	name: 'Tianlang',
-	password: '123456',
-	email: 'ltl0009107417@gmail.com',
-	createdDate: new Date().toISOString(),
-}]
 
 // 基础中间件配置
 app.use((req, res, next) => {
@@ -42,8 +22,18 @@ app.use(express.json())
 app.use(express.urlencoded({extended: true}))
 // 解析和解密（验证）cookie的中间件
 app.use(cookieParser('sdfsdf'))
+// 保存登录
+app.use((req, res, next) => {
+	req.user = db.prepare('SELECT * FROM users WHERE name = ?').get(req.signedCookies.loginUser)
+
+	res.locals.loginUser = req.user
+	res.locals.isLogin = !!req.user
+	next()
+})
 //主页面
 app.get('/', (req, res, next) => {
+	let posts = db.prepare('SELECT * FROM posts').all()
+
 	res.render('index.pug', {
 		posts: posts,
 		loginUser: req.signedCookies.loginUser
@@ -52,36 +42,18 @@ app.get('/', (req, res, next) => {
 //打开某个帖子
 app.get('/post/:postId', (req, res, next) => {
 	let postId = req.params.postId
-	let post = posts.find(it => it.id == postId)
+	let post = db.prepare('SELECT * FROM posts WHERE id = ?').get(postId)
 // 这里提交评论
 	if (post) {
-		let thisComments = comments.filter(it => it.postId == postId)
+		// 显示评论
+		let thisComments = db.prepare('SELECT * FROM comments JOIN users ON comments.createBy = userId WHERE postId = ?').all(postId)
+		let postOwner = db.prepare('SELECT * FROM users WHERE id = ?').get(post.createBy)
+
 		res.render('post.pug', {
 			post: post,
-			comments: thisComments
+			comments: thisComments,
+			postOwner,
 		})
-		// res.type('html')
-		// .end(`
-		// 	<h1>帖子${post.title}</h1>
-		// 	<p>帖子${post.content}</p>
-		// 	<hr>
-		// 	${
-		// 		thisComments.map(comment => {
-		// 			return `
-		// 				<fieldset>
-		// 					<legend>${comment.timeStamp}</legend>
-		// 					<p>${comment.content}</p>
-		// 				</fieldset>
-		// 			`
-		// 		}).join('\n')
-		// 	}
-		// 	<hr>
-		// 	<form action="/comment" method="post">
-		// 		<textarea name="content"></textarea>
-		// 		<input value="${post.id}" name="postId" hidden/>
-		// 		<button type="submit">提交</button>
-		// 	</form>
-		// `)
 	} else {
 		res.render('404.pug')
 	}
@@ -92,28 +64,40 @@ app.get('/add-post', (req, res, next) => {
 })
 // 发帖页面的post请求，用户操作页面
 app.post('/add-post', (req, res, next) => {
-	let post = req.body // 有title和content
-	post.id = prevPostId++
-	post.timeStamp = new Date().toISOString()
-	post.ip = req.ip
 
-	posts.push(post)
+	let post = req.body // 有title和content
+	post.createDate = new Date().toISOString()
+	post.createBy = req.user.id
+
+	db.prepare(`
+		INSERT INTO posts (title, content, createDate, createBy)
+		VALUES ($title, $content, $createDate, $createBy)
+	`).run(post)
 
 	res.redirect('/post/' + post.id)
 })
 // 评论
 app.post('/comment', (req, res, next) => {
+	if (!req.user) {
+		res.end('先登录')
+		return
+	}
 	let content = req.body.content
 	let postId = req.body.postId
+	let createBy = req.user.id
 
 	let comment = {
 		content,
 		postId,
-		timeStamp: new Date().toISOString(),
-		ip: req.ip,
+		createDate: new Date().toISOString(),
+		createBy,
 
 	}
-	comments.push(comment)
+	
+	let result = db.prepare(`
+		INSERT INTO comments(content, postId, createDate, createBy)
+		VALUES ($content, $postId, $createDate, $createBy)
+		`).run(comment)
 
 	res.redirect('/post/' + postId)
 })
@@ -125,27 +109,36 @@ app.post('/register', (req, res, next) => {
 		res.type('html').end('密码不一致')
 		return
 	} 
-	if (users.some(user => user.name == registerInfo.name)) {
-		res.type('html').end('已经注册')
-		return
+	// if (users.some(user => user.name == registerInfo.name)) {
+	// 	res.type('html').end('已经注册')
+	// 	return
+	// }
+	// if (users.some(user => user.email == registerInfo.email)) {
+	// 	res.type('html').end('邮箱已用')
+	// 	return
+	// }
+	registerInfo.createDate = new Date().toISOString()
+	
+	try {
+		db.prepare(`
+			INSERT INTO users (name, password, email, createDate)
+			VALUES ($name, $password, $email, $createDate)`
+		).run(registerInfo)
+	} catch(e) {
+		console.log(e)
+		if (e.code == 'SQLITE_CONSTRAINT_UNIQUE') {
+			res.end(e.massage)
+			return
+		} else {
+			e
+		}
 	}
-	if (users.some(user => user.email == registerInfo.email)) {
-		res.type('html').end('邮箱已用')
-		return
-	}
-	registerInfo.createdDate = new Date().toISOString()
-	users.push(registerInfo)
-
 	res.type('html').end('注册成功，去<a href="/login.html">登录</a>')
 })
 //登录页面
 app.post('/login', (req, res, next) => {
 	let loginInfo = req.body
-	let targetUser = users.find(user => {
-		if(user.name == loginInfo.name && user.password == loginInfo.password) {
-			return true
-		}
-	})
+	let targetUser = db.prepare('SELECT * FROM users WHERE name = ? AND password = ?').get(loginInfo)
 	
 	if (targetUser) {
 		res.cookie('loginUser', targetUser.name, {
@@ -162,6 +155,18 @@ app.get('/logout', (req, res, next) => {
 	res.clearCookie('loginUser')
 	res.redirect('/')
 })
+// 删评论
+app.post('/delete-comment/:commentId', (req, res, next) => {
+	db.prepare('DELETE FROM comments WHERE id = ?').run(req.params.commentId)
+	res.redirect(   req.get('referer')   )
+})
+// 验证码环节
+app.get('/yanzhengma', (req, res, next) => {
+	let captcha = svgCaptcha.create()
+
+	res.type('svg').end(captcha.data)
+})
+
 // 用hbs模板
 app.get('/test-tpl1', (req, res, next) => {
 	res.render('test.hbs', {

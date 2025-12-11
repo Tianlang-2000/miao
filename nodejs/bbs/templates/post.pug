@@ -2,14 +2,41 @@ extend layout.pug
 
 block content
 	h2= post.title
+	h3 by @#{postOwner.name}
 	p= post.content
+
+
+
 	hr
+
+
+
 	each comment in comments
 		fieldset
-			legend= comment.timeStamp
+			legend
+			  a(href="/user/" + comment.useId)=comment.name
+			  span= ' @ ' + comment.createDate
+        if loginUser.id == comment.userId && isLogin
+				  form(style="display:inline" action="/delete-comment/" + comment.id method='post')
+            button 删除
+					button(data-comment-id=comment.id onclick="deleteComment(event)") ajax删除
 			div= comment.content
+  
+	script.
+	  function deleteComment(e) {
+			fetch('/delete-comment/' + e.target.dataset.commentId, {
+				method: 'post'
+			}).then(() => {
+				e.target.closest('fieldset').remove()
+			})
+		}
+		
 	hr
-	form(action='/comment' method="post")
-		textarea(name="content")
-		input(name="postId" value=post.id hidden)
-		button 提交
+
+	if isLogin
+	  form(action='/comment' method="post")
+		  textarea(name="content")
+		  input(name="postId" value=post.id hidden)
+		  button 提交
+	else
+	  p 想锐评？去<a href="/register">登陆</a>
