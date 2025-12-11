@@ -22,6 +22,27 @@ app.use(express.json())
 app.use(express.urlencoded({extended: true}))
 // 解析和解密（验证）cookie的中间件
 app.use(cookieParser('sdfsdf'))
+
+const sessions = {}  // sessionId: session
+// 下发sessionId的中间件
+app.use((req, res, next) => {
+	if(!req.cookies.sessionId) {
+		let sessionId = Math.random().toString(36).slice(2)
+		res.cookie('sessionId', sessionId, {
+			maxAge: 86400000,
+		})
+		req.cookies.sessionId = sessionId
+	}
+
+	if (sessions[req.cookies.sessionId]) {
+		req.session = sessions[req.cookies.sessionId]
+	} else {
+		req.session = sessions[req.cookies.sessionId] = {}
+	}
+
+	res.locals.session = req.session
+	next()
+})
 // 保存登录
 app.use((req, res, next) => {
 	req.user = db.prepare('SELECT * FROM users WHERE name = ?').get(req.signedCookies.loginUser)
@@ -41,12 +62,21 @@ app.get('/', (req, res, next) => {
 })
 //打开某个帖子
 app.get('/post/:postId', (req, res, next) => {
-	let postId = req.params.postId
-	let post = db.prepare('SELECT * FROM posts WHERE id = ?').get(postId)
+	let post = db.prepare('SELECT * FROM posts WHERE id = ?').get(req.params.postId)
 // 这里提交评论
 	if (post) {
 		// 显示评论
-		let thisComments = db.prepare('SELECT * FROM comments JOIN users ON comments.createBy = userId WHERE postId = ?').all(postId)
+		let thisComments = db.prepare(`
+			SELECT
+			  comments.id,
+				comments.content,
+				comments.createDate,
+				users.id AS userId,
+				users.name
+			FROM comments
+			JOIN users 
+			ON comments.createBy = userId
+			WHERE postId = ?`).all(req.params.postId)
 		let postOwner = db.prepare('SELECT * FROM users WHERE id = ?').get(post.createBy)
 
 		res.render('post.pug', {
@@ -60,21 +90,33 @@ app.get('/post/:postId', (req, res, next) => {
 })
 // 发帖页面的get请求，用户打开页面
 app.get('/add-post', (req, res, next) => {
-	res.render('add-post.pug')
+	if (req.user) {
+		res.render('add-post.pug')
+	} else {
+		res.end('请登录')
+	}
 })
 // 发帖页面的post请求，用户操作页面
 app.post('/add-post', (req, res, next) => {
+	if (!req.user) {
+		res.end('登录！')
+		return
+	}
 
-	let post = req.body // 有title和content
-	post.createDate = new Date().toISOString()
-	post.createBy = req.user.id
-
-	db.prepare(`
+	// 创建全新对象，不污染 req.body
+	const postData = {
+		title: req.body.title,
+		content: req.body.content,
+		createDate: new Date().toISOString(),
+		createBy: req.user.id
+	}
+	console.log(postData.createBy)
+	const result = db.prepare(`
 		INSERT INTO posts (title, content, createDate, createBy)
 		VALUES ($title, $content, $createDate, $createBy)
-	`).run(post)
+	`).run(postData)
 
-	res.redirect('/post/' + post.id)
+	res.redirect('/post/' + result.lastInsertRowid)
 })
 // 评论
 app.post('/comment', (req, res, next) => {
@@ -109,14 +151,6 @@ app.post('/register', (req, res, next) => {
 		res.type('html').end('密码不一致')
 		return
 	} 
-	// if (users.some(user => user.name == registerInfo.name)) {
-	// 	res.type('html').end('已经注册')
-	// 	return
-	// }
-	// if (users.some(user => user.email == registerInfo.email)) {
-	// 	res.type('html').end('邮箱已用')
-	// 	return
-	// }
 	registerInfo.createDate = new Date().toISOString()
 	
 	try {
@@ -135,18 +169,29 @@ app.post('/register', (req, res, next) => {
 	}
 	res.type('html').end('注册成功，去<a href="/login.html">登录</a>')
 })
+
+app.get('/login', (req, res, next) => {
+	res.render('login.pug')
+})
 //登录页面
 app.post('/login', (req, res, next) => {
 	let loginInfo = req.body
-	let targetUser = db.prepare('SELECT * FROM users WHERE name = ? AND password = ?').get(loginInfo)
 	
+	// 验证验证码
+	if(req.session.failureCount >= 3 && loginInfo.captcha !== req.session.captcha) {
+		res.end('验证码错误')
+		return
+	}
+  let targetUser = db.prepare('SELECT * FROM users WHERE name = ?').get(loginInfo.name)
+
 	if (targetUser) {
 		res.cookie('loginUser', targetUser.name, {
 			maxAge: 86400 * 1000,
-			sign: true
+			signed: true
 		})
 		res.redirect('/')
 	} else {
+		req.session.failureCount = (req.session.failureCount | 0) + 1
 		res.type('html').end('用户名或密码错误')
 	}
 })
@@ -161,9 +206,10 @@ app.post('/delete-comment/:commentId', (req, res, next) => {
 	res.redirect(   req.get('referer')   )
 })
 // 验证码环节
-app.get('/yanzhengma', (req, res, next) => {
+app.get('/captcha', (req, res, next) => {
+	// 服务器生成随机码并画到图里
 	let captcha = svgCaptcha.create()
-
+	req.session.captcha = captcha.text
 	res.type('svg').end(captcha.data)
 })
 
