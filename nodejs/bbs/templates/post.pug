@@ -3,6 +3,19 @@ extend layout.pug
 block content
 	h2= post.title
 	h3 by @#{postOwner.name}
+	if isLogin && postOwner.id == post.createBy
+		button.delete-post(data-post-id=post.id) 删除
+		// 如果复杂，script应该在public里单写一个，在这里引入
+		// script(src="post.js")
+		script.
+			let btn = document.querySelector('.delete-post')
+			btn.onclick = async (e) => {
+				await fetch('/post/' + e.target.dataset.postId, {
+					method: 'delete',
+				})
+				location.href = '/'
+			}
+
 	p= post.content
 
 
@@ -16,7 +29,7 @@ block content
 			legend
 				a(href="/user/" + comment.useId)=comment.name
 				span= ' @ ' + comment.createDate
-				if loginUser.id == comment.userId && isLogin
+				if isLogin && loginUser.id == comment.userId
 					form(style="display:inline" action="/delete-comment/" + comment.id method='post')
 						button 删除
 					button(data-comment-id=comment.id onclick="deleteComment(event)") ajax删除
