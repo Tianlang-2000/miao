@@ -11,7 +11,12 @@ const router = createRouter({
       component: HomeView,
       children: [
         {
+          path: '',
+          redirect: 'select-create'
+        },
+        {
           path: 'select-create',
+          // alias: '', 
           component: SelectCreate,
         },
         {

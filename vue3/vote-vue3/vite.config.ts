@@ -9,11 +9,13 @@ import vueDevTools from 'vite-plugin-vue-devtools'
 export default defineConfig({
   server: {
     proxy:{
-      '/api': {
-        target: 'http://localhost:5175',
-        changeOrigin: true,
-        rewrite: (path) => path.replace(/^\/api/, '')
-      },
+      // '/api': {
+      //   target: 'http://localhost:5175',
+      //   changeOrigin: true,
+      //   rewrite: (path) => path.replace(/^\/api/, '')
+      // },
+      '/account': 'http://localhost:5175/',
+      '/vote': 'http://localhost:5175/',
     },
   },
   plugins: [

@@ -1,5 +1,5 @@
 @import "tailwindcss";
 
 input {
-	@apply border rounded focus:ring outline:none;
+	/* @apply border rounded focus:ring outline-none; */
 }
