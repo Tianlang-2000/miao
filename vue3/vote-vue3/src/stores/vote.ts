@@ -2,8 +2,14 @@ import { ref, computed } from 'vue'
 import { defineStore } from 'pinia'
 import axios from 'axios'
 
+type UserInfo = {
+  avatar: string,
+  name: string,
+  userId: number | string, 
+}
+
 export const useVoteStore = defineStore('vote', () => {
-   const user = ref(null)
+   const user = ref<null | UserInfo>(null)
    async function getUserInfo() {
       try {
          let userInfo = await axios.get('/account/current-user')
