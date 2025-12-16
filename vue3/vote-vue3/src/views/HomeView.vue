@@ -1,6 +1,8 @@
 <template>
 	<main class="flex flex-col h-[100vh]">
-		<router-view class="grow"/>
+		<div class="grow">
+			<router-view/>
+		</div>
 		<div class="flex h-12">
 			<RouterLink to="/select-create" class="[&.router-link-active]:text-green-500 basis-0 grow flex items-center flex-col">
 				<span>➕</span>

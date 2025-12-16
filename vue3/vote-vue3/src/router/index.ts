@@ -39,6 +39,10 @@ const router = createRouter({
       component: () => import('../views/MyVotes.vue'),
     },
     {
+      path: '/my-settings',
+      component: () => import('../views/MySettings.vue'),
+    },
+    {
       path: '/login',
       component: () => import('../views/Login.vue'),
     }

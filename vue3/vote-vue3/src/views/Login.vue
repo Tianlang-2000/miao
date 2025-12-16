@@ -1,8 +1,16 @@
 <template>
 	<div>
-		<input type="text" class="border" v-model="name">
-		<input type="password" class="border" v-model="password">
-		<button @click="login">登陆</button>
+		<h1 class="p-4 text-xl">
+			<RouterLink class="inline-flex gap-2 items-center" to="/">
+				<el-icon class="relative top-px">
+					<ArrowLeftBold />
+				</el-icon>
+				登录
+			</RouterLink>
+		</h1>
+		<div class="px-4 h-12 flex items-center"><input placeholder="用户名" type="text" class="border text-xl focus:ring outline-none w-full" v-model="name"></div>
+		<div class="px-4 h-12 flex items-center"><input placeholder="密码" type="password" class="border text-xl focus:ring outline-none w-full" v-model="password"></div>
+		<button class="block bg-blue-500 text-white py-3  m-auto w-2/3 rounded mt-2" @click="login">登录</button>
 	</div>
 </template>
 
