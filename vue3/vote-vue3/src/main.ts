@@ -5,7 +5,7 @@ import './style.css'
 import ElementPlus from 'element-plus'
 import 'element-plus/dist/index.css'
 import * as ElementPlusIconsVue from '@element-plus/icons-vue'
-
+import 'vant/lib/index.css'
 
 import Main from './Main.vue'
 import router from './router'

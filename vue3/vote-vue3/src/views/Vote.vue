@@ -13,27 +13,34 @@
 	</div>
 
 		<ul class="space-y-2">
-			<li @click="handleOptionClick(option.optionId)" class="bg-white shadow px-4" v-for="(option,idx) of voteInfo.options" :key="idx">
-				<div class="relative h-12 flex gap-2 items-center">
-					<span>{{ option.content }}</span>
+			<li @click="handleOptionClick(option.optionId)" v-for="(option,idx) of voteInfo.options" :key="idx">
+				<div class="bg-white shadow-lg">
+					<div class="relative h-12 flex gap-2 items-center mx-4">
+						<span>{{ option.content }}</span>
+	
+						<span v-if="isVoting && option.optionId == lastClickedOptionId" class="animate-spin flex items-center">
+							<el-icon><Loading /></el-icon>
+						</span>
+						<span v-else>{{ optionChecked[option.optionId]? '✅' : '' }}</span>
+	
+						<!-- <span class="grow"></span>它grow，或者下边那个的margin为auto -->
+						<span class="ml-auto">{{ optionVotes[option.optionId].length }} 票</span>
+						<span class="w-14 text-right">{{ optionPercentage[option.optionId] }}</span>
+						<div class="absolute bottom-0 h-[2px] bg-sky-500 transition-all" :style="{width: optionPercentage[option.optionId]}"></div>
 
-					<span v-if="isVoting && option.optionId == lastClickedOptionId" class="animate-spin flex items-center">
-						<el-icon><Loading /></el-icon>
-					</span>
-					<span v-else>{{ optionChecked[option.optionId]? '✅' : '' }}</span>
-
-					<!-- <span class="grow"></span>它grow，或者下边那个的margin为auto -->
-					<span class="ml-auto">{{ optionVotes[option.optionId].length }} 票</span>
-					<span class="w-14 text-right">{{ optionPercentage[option.optionId] }}</span>
-					<div class="absolute bottom-0 h-[2px] bg-sky-500 transition-all" :style="{width: optionPercentage[option.optionId]}"></div>
+					</div>
+				</div>
+				<div v-if="!voteInfo.vote.anonymous && visibleAvatars(idx).length > 0" class="flex flex-wrap gap-2 mt-2 mx-4">
+					<img class="align-top inline-block w-8 h-8 rounded-full border border-slat-500" v-for="user of visibleAvatars(idx)" :src="user.avatars" alt="">
+					<el-icon @click="avExpend[idx] = !avExpend[idx]" class="align-top inline-block !w-8 !h-8 rounded-full border border-slat-500"><More /></el-icon>
 				</div>
 			</li>
 		</ul>
 		<div class="flex justify-between px-4 text-slate-400 h-12 items-center">
-			<span>投票截止：{{ voteInfo.vote.deadline.replace('T', ' ').slice(0, 16) }}</span>
+			<span>投票截止：{{ new Date(voteInfo.vote.deadline).toLocaleString() }}</span>
 		</div>
 
-		<button @click="submit" v-if="showBottomButton" :disabled="selectedOptionId.length == 0" class="disabled:bg-gray-500        block bg-sky-500 text-white rounded p-1 mx-4">完成</button>
+		<button @click="submit" v-if="showBottomButton" :disabled="selectedOptionId.length == 0" class="disabled:bg-gray-500 block bg-sky-500 text-white rounded p-1 mx-4">完成</button>
 	</div>
 </template>
 
@@ -42,6 +49,8 @@ import { useVoteStore } from '@/stores/vote'
 import axios from 'axios'
 import { computed, onMounted, reactive, ref } from 'vue'
 import { useRoute } from 'vue-router'
+import { useWindowSize } from './hooks'
+
 
 	let route = useRoute()
 	let id = route.params.id
@@ -123,6 +132,23 @@ let optionChecked = computed(() => {
 })
 let isVoting = ref(false) // 是否正在发生投票（后台在发post）
 let lastClickedOptionId = ref(-1) //最后一次点击的选项的id，用来显示loading
+
+// 头像处理相关，pc有滚动条，算在窗口宽度里导致算错
+// let avatarContainer = ref(null)
+let size = useWindowSize()
+let avCount = computed(() => {
+	return Math.floor(((size.value.width - 32) + 8) / 40)
+})
+let avExpend = ref<boolean[]>(new Array(voteInfo.options.length).fill(false))
+// 此函数参数为选项下标,函数为了获取第idx个选项下面显示的头像
+function visibleAvatars(optionIndex: number) {
+	let { optionId } = voteInfo.options[optionIndex]
+	if (avExpend.value[optionIndex]) {
+		return optionVotes.value[optionId]
+	} else {
+		return optionVotes.value[optionId].slice(0, avCount.value - 1)
+	}
+}
 
 	function handleOptionClick(optionId: number) {
 		// 非匿名，点击即刻发请求

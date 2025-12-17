@@ -38,13 +38,28 @@
 		<div class="mt-4 bg-white flex flex-col px-4">
 			<div class="flex justify-between items-center h-12 border-b border-gray-300">
 				截止日期
-				<el-date-picker
+
+				<button @click="showPicker = true">{{ deadDate.join('-') }} {{ deadTime.join(':') }}</button>
+				<Popup v-model:show="showPicker" position="bottom">
+					<PickerGroup
+						title="截止日期"
+						:tabs="['选择日期', '选择时间']"
+						@confirm="showPicker = false"
+						@cancel="showPicker = false"
+					>
+					<DatePicker
+						v-model="deadDate"
+					/>
+					<TimePicker v-model="deadTime" />
+					</PickerGroup>
+				</Popup>
+				<!-- <el-date-picker
 						style="width: 190px"
 						v-model="deadline"
 						format="YYYY-MM-DD HH-mm"
 						type="datetime"
 						placeholder="选择截止时间"
-					/>
+					/> -->
 			</div>
 			<div class="flex justify-between items-center h-12 border-b border-gray-300">
 				匿名投票
@@ -65,6 +80,7 @@
 	import { ref,computed } from 'vue'
 	import { useRouter,useRoute, RouterLink } from 'vue-router'
 	import { useLogin } from './hooks'
+	import { DatePicker,Popup } from 'vant'
 
 	let voteStore = useVoteStore()
 	let router = useRouter()
@@ -73,9 +89,13 @@
 
 	useLogin()
 
-
-
-	let deadline = ref(new Date(Date.now() + 7 * 24 * 60 * 60 * 1000))
+	let showPicker = ref(false)
+	
+	let deadDate = ['2025', '12','29']
+	let deadTime = ['00', '00']
+	let deadline = computed(() => {
+		return new Date(deadDate.join('-') + ' ' + deadTime.join(':'))
+	})
 	let title = ref('')
 	let desc = ref('')
 	let options = ref(['',''])

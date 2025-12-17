@@ -1,5 +1,5 @@
 import { useVoteStore } from "@/stores/vote"
-import { computed, ref } from "vue"
+import { computed, onMounted, onUnmounted, ref } from "vue"
 import { useRoute, useRouter } from "vue-router"
 
 export function useSelectOne() {
@@ -28,4 +28,32 @@ export function useLogin() {
 		return false 
 	}
 	return true
+}
+
+// 响应计算目前窗口大小
+
+let Ref = ref({
+	width: window.innerWidth,
+	height: window.innerHeight,
+})
+let listened = false
+function onResize() {
+	Ref.value.width = window.innerWidth
+	Ref.value.height = window.innerHeight
+}
+
+export function useWindowSize() {
+
+	if (!listened) {
+		onMounted(() => {
+			listened = true
+			window.addEventListener('resize', onResize)
+		})
+		onUnmounted(() => {
+			listened = false
+			window.addEventListener('resize', onResize)
+			
+		})
+	}
+	return Ref
 }

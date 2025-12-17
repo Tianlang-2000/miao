@@ -8,16 +8,16 @@
 		</RouterLink>
 	</h1>
 	 <div class="divide-y divide-gray-300">
-		<div v-for="(vote,idx) of myVotes" @click="set(idx)" :key="vote.voteId">
-			<div to="/vote/1" class="hover:bg-green-300 h-16 flex items-center justify-between px-4">
+		<div v-for="(vote,idx) of myVotes" :key="vote.voteId">
+			<div class="hover:bg-green-300 h-16 flex items-center justify-between px-4" @click="set(idx)">
 				<span>{{ vote.title }}</span>
 				<span>30</span>
 			</div>
 			<div :class="{hidden: selectedIdx !== idx}" class="h-16 flex items-center border-t border-gray-300">
-				<span class="basis-0 grow flex flex-col items-center"><span>📚</span>编辑</span>
-				<RouterLink to="/vote/1" class="basis-0 grow flex flex-col items-center"><span>📚</span>查看</RouterLink>
+				<!-- <span class="basis-0 grow flex flex-col items-center"><span>📚</span>编辑</span> -->
+				<RouterLink :to="`/vote/${vote.voteId}`" class="basis-0 grow flex flex-col items-center"><span>📚</span>查看</RouterLink>
 				<span class="basis-0 grow flex flex-col items-center"><span>📚</span>分享</span>
-				<span class="basis-0 grow flex flex-col items-center"><span>📚</span>删除</span>
+				<span @Click="deleteVote(vote.voteId)" class="basis-0 grow flex flex-col items-center"><span>📚</span>删除</span>
 			</div>
 		</div>
 		
@@ -52,4 +52,8 @@ let [selectedIdx, set] = useSelectOne()
 
 // 封装实现单击一个元素显示，再单击收回扩展
 
+
+function deleteVote(id: number) {
+	
+}
 </script>
