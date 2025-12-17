@@ -75,7 +75,7 @@
 
 
 
-	let deadline = ref(new Date(Date.now() + 86400 * 7))
+	let deadline = ref(new Date(Date.now() + 7 * 24 * 60 * 60 * 1000))
 	let title = ref('')
 	let desc = ref('')
 	let options = ref(['',''])

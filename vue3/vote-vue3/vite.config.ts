@@ -16,6 +16,10 @@ export default defineConfig({
       // },
       '/account': 'http://localhost:5175/',
       '/vote': 'http://localhost:5175/',
+      '/realtime-voteinfo': {
+        target: 'ws://localhost:5175/',
+        ws: true,
+      },
     },
   },
   plugins: [

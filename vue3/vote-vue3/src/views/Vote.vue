@@ -13,27 +13,34 @@
 	</div>
 
 		<ul class="space-y-2">
-			<li @click="handleOptionClick(option.optionId)" class="bg-white shadow px-4 relative h-12 flex gap-2 items-center" v-for="(option,idx) of voteInfo.options" :key="idx">
-				<span>{{ option.content }}</span>
-				<span>{{ optionVotesByCurrentUser[option.optionId]? '✅' : '' }}</span>
-				<span class="grow"></span><!--它grow，或者下边那个的margin为auto-->
-				<span>{{ optionVotes[option.optionId].length }}票</span>
-				<span>{{ optionPercentage[option.optionId] }}</span>
-				<div class="absolute bottom-0 h-[2px] bg-sky-500" :style="{width: optionPercentage[option.optionId]}"></div>
+			<li @click="handleOptionClick(option.optionId)" class="bg-white shadow px-4" v-for="(option,idx) of voteInfo.options" :key="idx">
+				<div class="relative h-12 flex gap-2 items-center">
+					<span>{{ option.content }}</span>
+
+					<span v-if="isVoting && option.optionId == lastClickedOptionId" class="animate-spin flex items-center">
+						<el-icon><Loading /></el-icon>
+					</span>
+					<span v-else>{{ optionChecked[option.optionId]? '✅' : '' }}</span>
+
+					<!-- <span class="grow"></span>它grow，或者下边那个的margin为auto -->
+					<span class="ml-auto">{{ optionVotes[option.optionId].length }} 票</span>
+					<span class="w-14 text-right">{{ optionPercentage[option.optionId] }}</span>
+					<div class="absolute bottom-0 h-[2px] bg-sky-500 transition-all" :style="{width: optionPercentage[option.optionId]}"></div>
+				</div>
 			</li>
 		</ul>
 		<div class="flex justify-between px-4 text-slate-400 h-12 items-center">
 			<span>投票截止：{{ voteInfo.vote.deadline.replace('T', ' ').slice(0, 16) }}</span>
 		</div>
 
-		<button v-if="showBottomButton" class="block bg-sky-500 text-white rounded p-1 mx-4">完成</button>
+		<button @click="submit" v-if="showBottomButton" :disabled="selectedOptionId.length == 0" class="disabled:bg-gray-500        block bg-sky-500 text-white rounded p-1 mx-4">完成</button>
 	</div>
 </template>
 
 <script setup lang="ts">
 import { useVoteStore } from '@/stores/vote'
 import axios from 'axios'
-import { computed, reactive, ref } from 'vue'
+import { computed, onMounted, reactive, ref } from 'vue'
 import { useRoute } from 'vue-router'
 
 	let route = useRoute()
@@ -81,10 +88,10 @@ import { useRoute } from 'vue-router'
 				result[optionId] = false
 			}
 		}
-		return result
+		return result // { 53：true, 54: false }
 	})
 
-
+// 是否显示完成按钮，影响匿名
 	let showBottomButton = computed(() => {
 		if (!voteInfo.vote.anonymous) {
 			return false
@@ -100,17 +107,69 @@ import { useRoute } from 'vue-router'
 		}
 		return true
 	})
+// 匿名业务
+let selectedOptionId = ref<number[]>([]) // [53, 54] -> {53: true, 54,false}
+
+//模板中用来显示勾的数据
+let optionChecked = computed(() => {
+	if (showBottomButton.value) {
+		let result: any = {}
+		for (let id of selectedOptionId.value) {
+			result[id] = true
+		}
+		return result
+	}
+	return optionVotesByCurrentUser.value
+})
+let isVoting = ref(false) // 是否正在发生投票（后台在发post）
+let lastClickedOptionId = ref(-1) //最后一次点击的选项的id，用来显示loading
 
 	function handleOptionClick(optionId: number) {
 		// 非匿名，点击即刻发请求
-		if (!voteInfo.anonymous) {
+		lastClickedOptionId.value = optionId
+		if (!voteInfo.vote.anonymous) {
+			isVoting.value = true
 			axios.post(`/vote/${voteInfo.vote.voteId}`, {
 				optionIds: [optionId]
+			}).then(res => {
+				voteInfo.userVotes = res.data.result.userVotes
 			})
+			isVoting.value = false
 		} else {
 			// 匿名只有点击加提交才会，且不能再发
-			
+			//选中当前项，并且记下，点击提交的时候才发送所有选项
+
+			// 如果该项已经选中，就取消它的选中，否则加进来
+			if (showBottomButton.value) {
+				if (selectedOptionId.value.includes(optionId)) {
+					let index = selectedOptionId.value.indexOf(optionId)
+					selectedOptionId.value.splice(index, 1)
+				} else {
+					// 单选逻辑
+					if (!voteInfo.vote.multiple) {
+						selectedOptionId.value = [optionId]
+					} else {
+						selectedOptionId.value.push(optionId)
+					}
+				}
+			} else {
+			  alert('不能投了') 
+			}
 		}
 	}
-	
+	function submit() {
+		axios.post(`/vote/${voteInfo.vote.voteId}`, {
+			optionIds: selectedOptionId.value
+		}).then(res => {
+			voteInfo.userVotes = res.data.result.userVotes
+		})
+	}
+	onMounted(() => {
+		let ws = new WebSocket(`ws://${location.host}/realtime-voteinfo/{$id}`)
+
+		ws.onmessage = e => {
+			let userVotes = JSON.parse(e.data)
+			voteInfo.userVotes = userVotes
+		}
+	})
 </script>
