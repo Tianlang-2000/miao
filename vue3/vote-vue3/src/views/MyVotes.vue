@@ -9,7 +9,7 @@
 	</h1>
 	 <div class="divide-y divide-gray-300">
 		<div v-for="(vote,idx) of myVotes" :key="vote.voteId">
-			<div class="hover:bg-green-300 h-16 flex items-center justify-between px-4" @click="set(idx)">
+			<div class="hover:bg-green-300 h-16 flex items-center justify-between px-4" @click="setIndex(idx)">
 				<span>{{ vote.title }}</span>
 				<span>30</span>
 			</div>
@@ -17,7 +17,7 @@
 				<!-- <span class="basis-0 grow flex flex-col items-center"><span>📚</span>编辑</span> -->
 				<RouterLink :to="`/vote/${vote.voteId}`" class="basis-0 grow flex flex-col items-center"><span>📚</span>查看</RouterLink>
 				<span class="basis-0 grow flex flex-col items-center"><span>📚</span>分享</span>
-				<span @Click="deleteVote(vote.voteId)" class="basis-0 grow flex flex-col items-center"><span>📚</span>删除</span>
+				<span @click="deleteVote(vote, idx)" class="basis-0 grow flex flex-col items-center"><span>📚</span>删除</span>
 			</div>
 		</div>
 		
@@ -27,7 +27,7 @@
 import axios from 'axios';
 import { reactive, ref } from 'vue';
 import { useLogin, useSelectOne } from './hooks';
-
+import { showConfirmDialog } from 'vant'
 
 type VoteInfo = {
 	title: string,
@@ -48,12 +48,22 @@ try {
 	useLogin()
 }
 
-let [selectedIdx, set] = useSelectOne()
+let [selectedIdx, setIndex] = useSelectOne()
 
 // 封装实现单击一个元素显示，再单击收回扩展
 
 
-function deleteVote(id: number) {
-	
+ async function deleteVote(vote: VoteInfo, idx: number) {
+	try {
+
+		await showConfirmDialog({
+			message: `确认删除 ${vote.title} 吗？`
+		})
+		await axios.delete('/vote/' + vote.voteId)
+		myVotes.value.splice(idx, 1)
+		setIndex(-1)
+	} catch(e) {
+		console.log(e)
+	}
 }
 </script>
