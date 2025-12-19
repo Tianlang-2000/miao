@@ -4,7 +4,7 @@
 			<RouterLink class="inline-flex gap-2 items-center" to="/my-votes">
 				
 				<el-icon class="relative">
-					<ArrowRight />
+					<ArrowLeft/>
 				</el-icon>
 				个人设置
 			</RouterLink>

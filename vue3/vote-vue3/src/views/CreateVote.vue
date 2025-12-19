@@ -2,14 +2,20 @@
 	<div class="bg-gray-100 h-[100vh]">
 		
 		<div class="flex flex-col">
-			<h1 class="p-4 text-xl">
-				<RouterLink to="/" class="inline-flex gap-2 items-center">
+			
+			<NavBar :title="`创建${ type }投票`" left-arrow @click-left="router.push('/')">
+				<template #left>
+						<Icon name="arrow-left" size="18" /> 返回
+				</template>
+			</NavBar>
+			<!-- <h1 class="p-4 text-xl">
+					<RouterLink to="/" class="inline-flex gap-2 items-center">
 					<el-icon class="relative top-px">
 						<ArrowLeftBold />
 					</el-icon>
 					创建{{ type }}投票
 				</RouterLink>
-			</h1>
+			</h1> -->
 
 			<div class="space-y-3 bg-white px-4">
 				<input type="text" v-model="title" class="transition w-full border-b border-gray-300 outline-none focus:ring my-1 p-1 text-lg" placeholder="投票标题">
@@ -80,7 +86,7 @@
 	import { ref,computed } from 'vue'
 	import { useRouter,useRoute, RouterLink } from 'vue-router'
 	import { useLogin } from './hooks'
-	import { DatePicker,Popup } from 'vant'
+	import { DatePicker,Popup, NavBar, Icon } from 'vant'
 
 	let voteStore = useVoteStore()
 	let router = useRouter()

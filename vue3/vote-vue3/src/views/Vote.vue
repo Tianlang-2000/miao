@@ -5,11 +5,12 @@
 	<div class="my-8 mx-4 relative">
 		<h2 class="text-3xl font-bold mb-4">{{ voteInfo.vote.title }}</h2>
 		<h3>{{ voteInfo.vote.desc }} <span class="text-sky-500">{{ displayType }}</span></h3>
-		<span class="absolute top-0 right-0 bg-blue-500 flex items-center rounded-full text-white p-2">
+		<span @click="showShare = true" class="absolute top-0 right-0 bg-blue-500 flex items-center rounded-full text-white p-2">
 			<el-icon :size="24">
 				<Share />
 			</el-icon>
 		</span>
+		<ActionSheet v-model:show="showShare" :actions="shareActions" cancel-text="取消" description="分享到..." close-on-click-action close-on-click-overlay />
 	</div>
 
 		<ul class="space-y-2">
@@ -50,7 +51,24 @@ import axios from 'axios'
 import { computed, onMounted, reactive, ref } from 'vue'
 import { useRoute } from 'vue-router'
 import { useWindowSize } from './hooks'
-
+import { showToast, showNotify, ActionSheet, type ActionSheetAction, } from 'vant'
+import copy from 'copy-to-clipboard'
+// 分享业务
+	let showShare = ref(false)
+	let shareActions = [{
+		name: '复制链接',
+		callback: async function () {
+			copy(location.href)
+			showToast({
+				message:'复制成功',
+				position: 'top',
+			})
+			showNotify({ 
+				type: 'success', 
+				message: '复制成功'
+			})
+		},
+	}, {name: '发送给朋友'}]
 
 	let route = useRoute()
 	let id = route.params.id
