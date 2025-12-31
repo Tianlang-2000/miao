@@ -2,7 +2,6 @@
 	<div class="bg-gray-200 h-[100vh]">
 		<h1 class="p-4 text-xl">
 			<RouterLink class="inline-flex gap-2 items-center" to="/my-votes">
-				
 				<el-icon class="relative">
 					<ArrowLeft/>
 				</el-icon>
@@ -11,7 +10,7 @@
 		</h1>
 
 		<div class="flex items-center justify-center gap-4 p-12">
-			<img class="rounded-full w-20 h-20" src="https://www.dummyimage.com/32x32/000/fff" />
+			<img class="rounded-full w-20 h-20" :src="voteStore.user?.avatar || ''" />
 		</div>
 		<div class="divide-y divide-gray-300 bg-white">
 			<RouterLink class="block h-16 flex items-center justify-between px-4" to="/my-votes">

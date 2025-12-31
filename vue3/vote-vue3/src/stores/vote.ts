@@ -1,4 +1,4 @@
-import { ref, computed } from 'vue'
+import { ref } from 'vue'
 import { defineStore } from 'pinia'
 import axios from 'axios'
 
@@ -16,7 +16,7 @@ export const useVoteStore = defineStore('vote', () => {
          user.value = userInfo.data.result
       } catch (e) {
          if (e instanceof axios.AxiosError) {
-            console.log('user not logged in')
+            console.log('user not logined in')
          } else {
             throw e
          }

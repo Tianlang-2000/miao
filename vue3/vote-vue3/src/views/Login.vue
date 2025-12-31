@@ -11,6 +11,7 @@
 		<div class="px-4 h-12 flex items-center"><input placeholder="用户名" type="text" class="border text-xl focus:ring outline-none w-full" v-model="name"></div>
 		<div class="px-4 h-12 flex items-center"><input placeholder="密码" type="password" class="border text-xl focus:ring outline-none w-full" v-model="password"></div>
 		<button class="block bg-blue-500 text-white py-3  m-auto w-2/3 rounded mt-2" @click="login">登录</button>
+		<RouterLink to="/register">注册</RouterLink>
 	</div>
 </template>
 
