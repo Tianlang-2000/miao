@@ -1,5 +1,5 @@
 import { useVoteStore } from "@/stores/vote"
-import { computed, onMounted, onUnmounted, ref } from "vue"
+import { onMounted, onUnmounted, ref } from "vue"
 import { useRoute, useRouter } from "vue-router"
 
 export function useSelectOne() {

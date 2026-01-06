@@ -1,7 +1,7 @@
 <template>
 	<h1 class="p-4 text-xl">
 		<RouterLink to="/me" class="inline-flex gap-2 items-center">
-			<el-icon class="relative top-px">
+			<el-icon>
 				<ArrowLeftBold />
 			</el-icon>
 			我的投票
@@ -25,7 +25,7 @@
 </template>
 <script setup lang="ts">
 import axios from 'axios';
-import { reactive, ref } from 'vue';
+import { ref } from 'vue';
 import { useLogin, useSelectOne } from './hooks';
 import { showConfirmDialog } from 'vant'
 
