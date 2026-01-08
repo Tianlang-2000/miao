@@ -1,8 +1,18 @@
 import axios from "axios"
 import { useEffect, useState } from "react"
 import { printOrder } from "./utils.tsx"
-import { makeAutoObservable, observable } from 'mobx'
+import { makeAutoObservable } from 'mobx'
 import { observer } from "mobx-react"
+export type Food = {
+	id: number,
+	rid: number,
+	name: string,
+	desc: string,
+	price: number,
+	img: string,
+	category: string,
+	status: 'on' | 'off',
+}
 export type Order = {
 	id: number,
 	rid: number,
@@ -13,16 +23,7 @@ export type Order = {
 	timestamp: string,
 	totalPrice: number,
 	details: {
-		food: {
-			id: number,
-			rid: number,
-			name: string,
-			desc: string,
-			price: number,
-			img: string,
-			category: string,
-			status: string,
-		},
+		food: Food,
 		amount: number
 	}[],
 }
@@ -43,7 +44,7 @@ class OrderManager {
 	}
 }
 function OrderManageView() {
-	let [manager] = useState(() => observable(new OrderManager()))
+	let [manager] = useState(() => new OrderManager())
 	useEffect(() => {
 		let ignore = false
 

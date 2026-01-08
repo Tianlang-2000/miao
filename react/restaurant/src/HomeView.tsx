@@ -31,7 +31,7 @@ export default function HomeView() {
 	}
 	return (
 		<div className="flex">
-			<div className="w-48 border-r">
+			<div className="xw-48 border-r">
 				<span>{userInfo?.title}</span>
 				<Link className="block" to="/home/orders">订单管理</Link>
 				<Link className="block" to="/home/foods">菜品管理</Link>

@@ -8,6 +8,7 @@ import React from "react";
 var OrderManageView = React.lazy(() => import('./OrderManageView.tsx'))
 var FoodManageView = React.lazy(() => import('./FoodManageView.tsx'))
 var DeskManageView = React.lazy(() => import('./DeskManageView.tsx'))
+var AddFoodView = React.lazy(() => import('./AddFoodView.tsx'))
 
 const router = createBrowserRouter([
   {
@@ -29,6 +30,10 @@ const router = createBrowserRouter([
       {
         path: 'foods',
         element: <FoodManageView />,
+      },
+      {
+        path: 'add-food',
+        element: <AddFoodView />,
       },
       {
         path: 'desks',
